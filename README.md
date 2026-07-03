@@ -59,6 +59,12 @@ LLM_PROVIDER=openai            # or: anthropic (needs ANTHROPIC_API_KEY)
 > All configuration is via env vars; **no secrets are hardcoded**. `.env` is
 > gitignored.
 
+> **Switching embedding provider?** Chunk ids are content hashes (independent of
+> the embedding), so re-ingesting into an existing store *skips* already-stored
+> chunks and won't re-embed them with the new model. When you change
+> `EMBEDDING_PROVIDER`/`EMBEDDING_MODEL`, start a fresh store — delete
+> `chroma_db/` or point `CHROMA_PERSIST_DIR` at a new directory — then re-ingest.
+
 ---
 
 ## Quick start (CLI)
