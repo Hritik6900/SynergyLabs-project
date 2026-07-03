@@ -1,0 +1,25 @@
+# Secrets
+.env
+
+# Vector store data
+chroma_db/
+*.sqlite3
+
+# Logs
+logs/*.log
+
+# Note: results/eval_results.json, results/eval_summary.md, and
+# results/cost_comparison.md are intentionally COMMITTED as example outputs so a
+# reviewer can see results without running anything. Regenerate them with
+# `python -m eval.run_eval` and `python results/cost_analysis.py`.
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
