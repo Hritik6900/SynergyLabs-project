@@ -1,0 +1,52 @@
+{
+  "_instructions": [
+    "Fill this file with 15-30 question/answer pairs from YOUR corpus.",
+    "For each question, mark which chunk(s) are the GOLD (truly relevant) chunks.",
+    "You can reference gold chunks in EITHER of two ways (mix freely):",
+    "  1. gold_chunks: human-friendly [{source, chunk_index}] pairs (RECOMMENDED).",
+    "  2. gold_chunk_ids: the raw sha256 chunk ids.",
+    "To discover the source/chunk_index/id of every stored chunk, run:",
+    "    python -m src.cli chunks",
+    "gold_answer is OPTIONAL: provide it to enable Exact-Match / F1 scoring.",
+    "The '_instructions' and '_note' keys are ignored by the eval harness.",
+    "The examples below are wired to the bundled sample_corpus so `run_eval` works out of the box."
+  ],
+  "_note": "Delete the examples and add your own once you ingest your corpus. Keep the same shape.",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does a cosine similarity of 1.0 between two vectors mean?",
+      "gold_answer": "The two vectors point in the same direction.",
+      "gold_chunks": [{ "source": "vector_databases.md", "chunk_index": 0 }],
+      "gold_chunk_ids": []
+    },
+    {
+      "id": "q2",
+      "question": "Why is ChromaDB a low-cost vector store compared to a fully managed one?",
+      "gold_answer": "It runs embedded on the local filesystem with no always-on pods, so cost is essentially the disk and VM you already run.",
+      "gold_chunks": [{ "source": "chromadb_notes.md", "chunk_index": 0 }],
+      "gold_chunk_ids": []
+    },
+    {
+      "id": "q3",
+      "question": "How does deriving a chunk id from its content make re-ingestion idempotent?",
+      "gold_answer": "Because identical content always hashes to the same id, so inserting it again is detected and skipped, creating no duplicate vectors.",
+      "gold_chunks": [{ "source": "chromadb_notes.md", "chunk_index": 0 }],
+      "gold_chunk_ids": []
+    },
+    {
+      "id": "q4",
+      "question": "What should a RAG system do when no retrieved chunk is relevant to the question?",
+      "gold_answer": "It should say it has no relevant context rather than fabricate an answer.",
+      "gold_chunks": [{ "source": "rag_basics.html", "chunk_index": 0 }],
+      "gold_chunk_ids": []
+    },
+    {
+      "id": "q5",
+      "question": "Which metrics are used to measure retrieval quality in RAG?",
+      "gold_answer": "Recall@k, Mean Reciprocal Rank (MRR), and normalized Discounted Cumulative Gain (nDCG).",
+      "gold_chunks": [{ "source": "rag_basics.html", "chunk_index": 0 }],
+      "gold_chunk_ids": []
+    }
+  ]
+}
