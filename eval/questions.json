@@ -1,52 +1,62 @@
 {
   "_instructions": [
-    "Fill this file with 15-30 question/answer pairs from YOUR corpus.",
-    "For each question, mark which chunk(s) are the GOLD (truly relevant) chunks.",
-    "You can reference gold chunks in EITHER of two ways (mix freely):",
-    "  1. gold_chunks: human-friendly [{source, chunk_index}] pairs (RECOMMENDED).",
-    "  2. gold_chunk_ids: the raw sha256 chunk ids.",
-    "To discover the source/chunk_index/id of every stored chunk, run:",
-    "    python -m src.cli chunks",
+    "These 8 questions are grounded STARTERS against your real corpus (data/sample_corpus).",
+    "Expand this to 15-30 questions for full eval credit — the brief requires a fixed 15-30 set.",
+    "For each question, mark the GOLD (truly relevant) chunk(s) via gold_chunks [{source, chunk_index}].",
+    "Run `python -m src.cli chunks` to see every chunk's source/chunk_index/id if you re-chunk.",
     "gold_answer is OPTIONAL: provide it to enable Exact-Match / F1 scoring.",
-    "The '_instructions' and '_note' keys are ignored by the eval harness.",
-    "The examples below are wired to the bundled sample_corpus so `run_eval` works out of the box."
+    "IMPORTANT: gold chunk_index values assume the current chunk settings (500/50). If you change",
+    "CHUNK_SIZE_TOKENS/CHUNK_OVERLAP_TOKENS, re-ingest and re-check indices with `src.cli chunks`.",
+    "Keys starting with '_' are ignored by the harness."
   ],
-  "_note": "Delete the examples and add your own once you ingest your corpus. Keep the same shape.",
   "questions": [
     {
-      "id": "q1",
-      "question": "What does a cosine similarity of 1.0 between two vectors mean?",
-      "gold_answer": "The two vectors point in the same direction.",
-      "gold_chunks": [{ "source": "vector_databases.md", "chunk_index": 0 }],
-      "gold_chunk_ids": []
+      "id": "dualcast-what",
+      "question": "What is DualCast and what problem does it solve?",
+      "gold_answer": "DualCast is a privacy-preserving, real-time AI commentary generation system for eSports.",
+      "gold_chunks": [{ "source": "DualCast.md", "chunk_index": 0 }]
     },
     {
-      "id": "q2",
-      "question": "Why is ChromaDB a low-cost vector store compared to a fully managed one?",
-      "gold_answer": "It runs embedded on the local filesystem with no always-on pods, so cost is essentially the disk and VM you already run.",
-      "gold_chunks": [{ "source": "chromadb_notes.md", "chunk_index": 0 }],
-      "gold_chunk_ids": []
+      "id": "dualcast-temperature",
+      "question": "What sampling temperature does DualCast use for commentary generation, and why?",
+      "gold_answer": "Temperature 0.8, for controlled randomness that avoids hallucination while allowing variety.",
+      "gold_chunks": [{ "source": "DualCast.md", "chunk_index": 6 }]
     },
     {
-      "id": "q3",
-      "question": "How does deriving a chunk id from its content make re-ingestion idempotent?",
-      "gold_answer": "Because identical content always hashes to the same id, so inserting it again is detected and skipped, creating no duplicate vectors.",
-      "gold_chunks": [{ "source": "chromadb_notes.md", "chunk_index": 0 }],
-      "gold_chunk_ids": []
+      "id": "navdrishti-purpose",
+      "question": "What is the purpose of the NavDrishti smart stick?",
+      "gold_answer": "NavDrishti is an AI-powered smart stick application that assists visually impaired users with navigation.",
+      "gold_chunks": [{ "source": "NavDrishti-Server.md", "chunk_index": 0 }]
     },
     {
-      "id": "q4",
-      "question": "What should a RAG system do when no retrieved chunk is relevant to the question?",
-      "gold_answer": "It should say it has no relevant context rather than fabricate an answer.",
-      "gold_chunks": [{ "source": "rag_basics.html", "chunk_index": 0 }],
-      "gold_chunk_ids": []
+      "id": "navdrishti-cooldown",
+      "question": "How does NavDrishti avoid repeating the same audio warning?",
+      "gold_answer": "A per-class cooldown so the same detection type won't repeat within 20 seconds, plus a global cooldown of at most one warning per second.",
+      "gold_chunks": [{ "source": "NavDrishti-Server.md", "chunk_index": 7 }]
     },
     {
-      "id": "q5",
-      "question": "Which metrics are used to measure retrieval quality in RAG?",
-      "gold_answer": "Recall@k, Mean Reciprocal Rank (MRR), and normalized Discounted Cumulative Gain (nDCG).",
-      "gold_chunks": [{ "source": "rag_basics.html", "chunk_index": 0 }],
-      "gold_chunk_ids": []
+      "id": "terravision-model",
+      "question": "Which AI model does TerraVision use, and for what?",
+      "gold_answer": "Google Gemini AI, to provide intelligent urban sustainability planning insights.",
+      "gold_chunks": [{ "source": "terra_vision.md", "chunk_index": 0 }]
+    },
+    {
+      "id": "terravision-image-steps",
+      "question": "How does TerraVision generate a transformed image using Gemini?",
+      "gold_answer": "Convert the image to Base64, send it to Gemini with a transformation prompt requesting TEXT and IMAGE response modalities, then extract the generated image and text.",
+      "gold_chunks": [{ "source": "terra_vision.md", "chunk_index": 4 }]
+    },
+    {
+      "id": "voterakshak-type",
+      "question": "What type of system is Vote Rakshak?",
+      "gold_answer": "A decentralized, blockchain-based voting system.",
+      "gold_chunks": [{ "source": "voteRakshak.md", "chunk_index": 0 }]
+    },
+    {
+      "id": "voterakshak-vote-endpoint",
+      "question": "Which API endpoint is used to cast a vote in Vote Rakshak?",
+      "gold_answer": "POST /vote",
+      "gold_chunks": [{ "source": "voteRakshak.md", "chunk_index": 4 }]
     }
   ]
 }

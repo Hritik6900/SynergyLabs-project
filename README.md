@@ -326,13 +326,22 @@ Read it off your own `results/eval_summary.md`:
   grounding prompt, a smaller/tighter context window, lower temperature, or a
   stronger model.
 
-On the bundled sample corpus, retrieval is essentially saturated (Recall@k = 1.0,
-nDCG ≈ 0.93 — the gold chunk is always retrieved because the corpus is tiny), so
-any quality gap would sit in generation/faithfulness. On a real corpus the
-diagnostic is the same: if Hit Rate is high but faithfulness is low, invest in the
-prompt/model; if Hit Rate itself is low, invest in retrieval. Context Precision is
-low here (0.33) only because each question has one gold chunk out of `k=3`
-retrieved — expected, not a defect.
+**On this corpus (4 project READMEs, 63 chunks, 8 starter questions, k=5), retrieval
+is the weaker link.** The committed run in [`results/eval_summary.md`](results/eval_summary.md)
+shows Recall@5 = **0.875** and MRR@5 = **0.60** — i.e. one question's gold chunk
+never made the top-5, and even when the gold chunk is retrieved it isn't always
+ranked first. Meanwhile the LLM-judge scores generation at **5.0/5.0 faithfulness
+and relevance**: whenever the right context *is* retrieved, the Groq answer is
+fully grounded and on-topic. So the investment that would move the needle here is
+upstream — better embeddings (e.g. `all-mpnet-base-v2`), higher `k`, smaller/tuned
+chunks, or hybrid + reranking — not the generator.
+
+Two honest caveats: (1) this is an **8-question starter set** — expand to 15–30
+(see below) for a statistically meaningful read, and the numbers will shift.
+(2) EM = 0.0 with F1 = 0.34 is expected: the model paraphrases correct answers
+rather than matching the terse gold strings, which is why faithfulness (semantic)
+is the more informative answer metric here. Context Precision = 0.175 is also
+expected — each question has a single gold chunk out of `k=5` retrieved.
 
 ---
 

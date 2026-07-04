@@ -1,6 +1,6 @@
 {
   "config": {
-    "k": 3,
+    "k": 5,
     "similarity_threshold": 0.25,
     "embedding": {
       "provider": "sentence-transformers",
@@ -9,226 +9,377 @@
     },
     "llm_provider": "groq",
     "llm_model": "llama-3.3-70b-versatile",
-    "num_questions": 5,
-    "num_chunks_in_store": 3
+    "num_questions": 8,
+    "num_chunks_in_store": 63
   },
   "retrieval_metrics": {
-    "recall@k": 1.0,
-    "hit_rate@k": 1.0,
-    "mrr@k": 0.9,
-    "ndcg@k": 0.9262,
-    "context_precision@k": 0.3333
+    "recall@k": 0.875,
+    "hit_rate@k": 0.875,
+    "mrr@k": 0.6042,
+    "ndcg@k": 0.6741,
+    "context_precision@k": 0.175
   },
   "answer_metrics": {
     "llm_judge_enabled": true,
     "mean_faithfulness_1to5": 5.0,
     "mean_answer_relevance_1to5": 5.0,
-    "judged_questions": 5,
+    "judged_questions": 8,
     "exact_match": 0.0,
-    "token_f1": 0.543,
-    "gold_answer_questions": 5
+    "token_f1": 0.34,
+    "gold_answer_questions": 8
   },
   "latency": {
-    "count": 5,
-    "p50_ms": 22.62,
-    "p95_ms": 26.81,
-    "mean_ms": 22.36,
-    "max_ms": 27.41
+    "count": 8,
+    "p50_ms": 21.3,
+    "p95_ms": 28.16,
+    "mean_ms": 22.49,
+    "max_ms": 28.34
   },
   "warnings": [],
   "per_question": [
     {
-      "id": "q1",
-      "question": "What does a cosine similarity of 1.0 between two vectors mean?",
+      "id": "dualcast-what",
+      "question": "What is DualCast and what problem does it solve?",
       "gold_chunk_ids": [
-        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3"
       ],
       "retrieved_chunk_ids": [
-        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377",
-        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
-        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875"
+        "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02",
+        "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526",
+        "25a02482ea13541ed3922ddec8df0d09795b7c713cd38fd0c3f1e7f2457ad1f7"
       ],
-      "retrieval_latency_ms": 17.07,
-      "retrieval_metrics": {
-        "recall@k": 1.0,
-        "hit_rate@k": 1.0,
-        "mrr@k": 1.0,
-        "ndcg@k": 1.0,
-        "context_precision@k": 0.3333333333333333
-      },
-      "answer": "A cosine similarity of 1.0 between two vectors means they point in the same direction [source #0].",
-      "cited_chunk_ids": [
-        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
-      ],
-      "token_usage": {
-        "prompt_tokens": 457,
-        "completion_tokens": 24,
-        "total_tokens": 481
-      },
-      "no_relevant_context": false,
-      "judge": {
-        "faithfulness": 5,
-        "faithfulness_rationale": "The answer directly quotes the context chunk that defines cosine similarity of 1.0.",
-        "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer directly and fully responds to the question about the meaning of a cosine similarity of 1.0 between two vectors."
-      },
-      "em": 0.0,
-      "f1": 0.5714
-    },
-    {
-      "id": "q2",
-      "question": "Why is ChromaDB a low-cost vector store compared to a fully managed one?",
-      "gold_chunk_ids": [
-        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875"
-      ],
-      "retrieved_chunk_ids": [
-        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875",
-        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377",
-        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2"
-      ],
-      "retrieval_latency_ms": 24.44,
-      "retrieval_metrics": {
-        "recall@k": 1.0,
-        "hit_rate@k": 1.0,
-        "mrr@k": 1.0,
-        "ndcg@k": 1.0,
-        "context_precision@k": 0.3333333333333333
-      },
-      "answer": "ChromaDB is a low-cost vector store because it requires no separate server process, storing vectors and metadata on the local filesystem, which means cost is essentially the disk and the VM already run [chromadb_notes.md #0].",
-      "cited_chunk_ids": [
-        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875",
-        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
-      ],
-      "token_usage": {
-        "prompt_tokens": 786,
-        "completion_tokens": 47,
-        "total_tokens": 833
-      },
-      "no_relevant_context": false,
-      "judge": {
-        "faithfulness": 5,
-        "faithfulness_rationale": "The answer directly quotes and paraphrases a sentence from the context chunk chromadb_notes.md, accurately conveying the reason for ChromaDB's low cost.",
-        "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer directly addresses the question, providing a clear and concise explanation for why ChromaDB is considered a low-cost vector store compared to a fully managed one."
-      },
-      "em": 0.0,
-      "f1": 0.5098
-    },
-    {
-      "id": "q3",
-      "question": "How does deriving a chunk id from its content make re-ingestion idempotent?",
-      "gold_chunk_ids": [
-        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875"
-      ],
-      "retrieved_chunk_ids": [
-        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
-        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875",
-        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
-      ],
-      "retrieval_latency_ms": 22.62,
+      "retrieval_latency_ms": 19.33,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 0.5,
         "ndcg@k": 0.6309297535714575,
-        "context_precision@k": 0.3333333333333333
+        "context_precision@k": 0.2
       },
-      "answer": "Deriving a chunk id from its content (e.g., a hash of the source path plus the chunk text) makes re-ingestion idempotent because if you insert a record with an id that already exists, you can detect and skip it [chromadb_notes.md #0]. This prevents duplicate vectors from being created when running ingestion twice [chromadb_notes.md #0].",
+      "answer": "DualCast is a privacy-preserving, real-time AI commentary generation system designed for live eSports broadcasts [source #0]. It solves the problem of providing real-time autonomous commentary for eSports, eliminating the need for live human casters or expensive post-production commentary overlays [source #0].",
       "cited_chunk_ids": [
-        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
-        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875"
+        "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02",
+        "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526"
       ],
       "token_usage": {
-        "prompt_tokens": 783,
-        "completion_tokens": 77,
-        "total_tokens": 860
+        "prompt_tokens": 1723,
+        "completion_tokens": 57,
+        "total_tokens": 1780
       },
       "no_relevant_context": false,
       "judge": {
         "faithfulness": 5,
-        "faithfulness_rationale": "The answer directly quotes and references the context chunk from chromadb_notes.md, supporting its claim about idempotent ingestion.",
+        "faithfulness_rationale": "The answer directly quotes and paraphrases information from the context chunks, accurately representing the DualCast system and its purpose.",
         "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer fully and directly addresses the question about how deriving a chunk id from its content makes re-ingestion idempotent."
+        "answer_relevance_rationale": "The answer fully and directly addresses the question, providing a clear description of DualCast and the problem it solves."
       },
       "em": 0.0,
-      "f1": 0.2059
+      "f1": 0.4167
     },
     {
-      "id": "q4",
-      "question": "What should a RAG system do when no retrieved chunk is relevant to the question?",
+      "id": "dualcast-temperature",
+      "question": "What sampling temperature does DualCast use for commentary generation, and why?",
       "gold_chunk_ids": [
-        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2"
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02"
       ],
       "retrieved_chunk_ids": [
-        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
-        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875",
-        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02",
+        "6ebb9828b6ff218abe49897933694d81bff973a55d277f0269ad14a6150fff50",
+        "39eb4dd5c8161939a30aed2cc4eeca82e196afc859abbfcfaf016165629c67bf",
+        "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559"
       ],
-      "retrieval_latency_ms": 20.27,
+      "retrieval_latency_ms": 20.35,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.5,
+        "ndcg@k": 0.6309297535714575,
+        "context_precision@k": 0.2
+      },
+      "answer": "DualCast uses a temperature of 0.8 for controlled randomness in commentary generation [DualCast.md #6]. This avoids hallucination and allows for variety in the generated commentary.",
+      "cited_chunk_ids": [
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02",
+        "6ebb9828b6ff218abe49897933694d81bff973a55d277f0269ad14a6150fff50",
+        "39eb4dd5c8161939a30aed2cc4eeca82e196afc859abbfcfaf016165629c67bf",
+        "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559"
+      ],
+      "token_usage": {
+        "prompt_tokens": 2233,
+        "completion_tokens": 38,
+        "total_tokens": 2271
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer directly quotes a temperature value from the context chunks, supporting its claim about DualCast's commentary generation.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer fully and directly addresses the question about the sampling temperature used by DualCast for commentary generation and provides a reason for this choice."
+      },
+      "em": 0.0,
+      "f1": 0.4706
+    },
+    {
+      "id": "navdrishti-purpose",
+      "question": "What is the purpose of the NavDrishti smart stick?",
+      "gold_chunk_ids": [
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25"
+      ],
+      "retrieved_chunk_ids": [
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02",
+        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217",
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795"
+      ],
+      "retrieval_latency_ms": 28.34,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 1.0,
         "ndcg@k": 1.0,
-        "context_precision@k": 0.3333333333333333
+        "context_precision@k": 0.2
       },
-      "answer": "A RAG system should say it has no relevant context rather than fabricate an answer [source #0].",
+      "answer": "The NavDrishti smart stick is an assistive technology platform designed to assist visually impaired individuals in navigation and obstacle detection [source #0]. It provides real-time object detection with audio alerts, enabling users to perceive their environment safely [source #0].",
       "cited_chunk_ids": [
-        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2"
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25"
       ],
       "token_usage": {
-        "prompt_tokens": 456,
+        "prompt_tokens": 644,
+        "completion_tokens": 52,
+        "total_tokens": 696
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer directly quotes and paraphrases information from the context chunks, accurately representing the purpose of the NavDrishti smart stick.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer fully and directly addresses the question, clearly stating the purpose of the NavDrishti smart stick."
+      },
+      "em": 0.0,
+      "f1": 0.36
+    },
+    {
+      "id": "navdrishti-cooldown",
+      "question": "How does NavDrishti avoid repeating the same audio warning?",
+      "gold_chunk_ids": [
+        "a5cca769f1ffa5d94ee0fedc9d1aec15b38131cfd97513f19d43ccc02b041b9b"
+      ],
+      "retrieved_chunk_ids": [
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "ead93a497a98a499ac54b27c6c6c3b2ad3a470d2f55fdd5a1ed751219524306e",
+        "ae97d5fbb984389d8e025ef3587a3b1a309b4417c2770dd827820eed3b7b449c",
+        "6ebb9828b6ff218abe49897933694d81bff973a55d277f0269ad14a6150fff50",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3"
+      ],
+      "retrieval_latency_ms": 24.14,
+      "retrieval_metrics": {
+        "recall@k": 0.0,
+        "hit_rate@k": 0.0,
+        "mrr@k": 0.0,
+        "ndcg@k": 0.0,
+        "context_precision@k": 0.0
+      },
+      "answer": "NavDrishti avoids repeating the same audio warning by applying cooldown timers, including per-detection class cooldown (20s) and global warning cooldown [NavDrishti-Server.md #5]. It also suppresses ambiguous detections with high-variance scores [NavDrishti-Server.md #5].",
+      "cited_chunk_ids": [
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "ead93a497a98a499ac54b27c6c6c3b2ad3a470d2f55fdd5a1ed751219524306e",
+        "ae97d5fbb984389d8e025ef3587a3b1a309b4417c2770dd827820eed3b7b449c"
+      ],
+      "token_usage": {
+        "prompt_tokens": 1654,
+        "completion_tokens": 63,
+        "total_tokens": 1717
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer directly quotes and references specific context chunks from NavDrishti-Server.md #5, demonstrating that every claim is supported by the context.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer fully and directly addresses the question of how NavDrishti avoids repeating the same audio warning, providing specific details from the context."
+      },
+      "em": 0.0,
+      "f1": 0.1923
+    },
+    {
+      "id": "terravision-model",
+      "question": "Which AI model does TerraVision use, and for what?",
+      "gold_chunk_ids": [
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795"
+      ],
+      "retrieved_chunk_ids": [
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "a5cca769f1ffa5d94ee0fedc9d1aec15b38131cfd97513f19d43ccc02b041b9b",
+        "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3"
+      ],
+      "retrieval_latency_ms": 17.61,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
+        "context_precision@k": 0.2
+      },
+      "answer": "TerraVision uses the **Google Gemini AI** model, specifically the `gemini-2.5-flash` model, for text analysis, image generation, and vision API capabilities, including green corridor planning, urban metrics analysis, and street photo transformation [source #0].",
+      "cited_chunk_ids": [
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "a5cca769f1ffa5d94ee0fedc9d1aec15b38131cfd97513f19d43ccc02b041b9b",
+        "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3"
+      ],
+      "token_usage": {
+        "prompt_tokens": 2674,
+        "completion_tokens": 56,
+        "total_tokens": 2730
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer directly quotes and references the context chunk that mentions the Google Gemini AI model used by TerraVision.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer fully and directly addresses the question by specifying the AI model used by TerraVision and its purposes."
+      },
+      "em": 0.0,
+      "f1": 0.2439
+    },
+    {
+      "id": "terravision-image-steps",
+      "question": "How does TerraVision generate a transformed image using Gemini?",
+      "gold_chunk_ids": [
+        "d28bb7086903e5ce3ebe592181223fcfef1228d2fc74bc4a0aa3f8d10a0b65e0"
+      ],
+      "retrieved_chunk_ids": [
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
+        "d28bb7086903e5ce3ebe592181223fcfef1228d2fc74bc4a0aa3f8d10a0b65e0",
+        "baabc66be07fc3663b42c6c8baf58033d5143b2ad650aa16b10daf3c358b0597",
+        "f67c3c0b49d3416e3816cf5600dbaf69b11cad4704c6cc9f389407f8fe7c27a9",
+        "7ed35b882587ff5f057eef9e99efc744c334f6aea7a1ef67dfad860960b77d47"
+      ],
+      "retrieval_latency_ms": 27.81,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.5,
+        "ndcg@k": 0.6309297535714575,
+        "context_precision@k": 0.2
+      },
+      "answer": "TerraVision generates a transformed image using Gemini by following these steps: \n1. Converting the image to Base64, \n2. Sending it to Gemini with a transformation prompt, \n3. Requesting `responseModalities: [\"TEXT\", \"IMAGE\"]`, \n4. Extracting the generated image and text analysis, and \n5. Fallback to multiple models if needed [source #4].",
+      "cited_chunk_ids": [
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
+        "d28bb7086903e5ce3ebe592181223fcfef1228d2fc74bc4a0aa3f8d10a0b65e0",
+        "baabc66be07fc3663b42c6c8baf58033d5143b2ad650aa16b10daf3c358b0597",
+        "f67c3c0b49d3416e3816cf5600dbaf69b11cad4704c6cc9f389407f8fe7c27a9"
+      ],
+      "token_usage": {
+        "prompt_tokens": 2075,
+        "completion_tokens": 83,
+        "total_tokens": 2158
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer is directly supported by the context, specifically in the section describing how TerraVision generates a transformed image using Gemini.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer fully and directly addresses the question of how TerraVision generates a transformed image using Gemini."
+      },
+      "em": 0.0,
+      "f1": 0.5
+    },
+    {
+      "id": "voterakshak-type",
+      "question": "What type of system is Vote Rakshak?",
+      "gold_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1"
+      ],
+      "retrieved_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
+        "424de1a5da810c0c3573015cabe95f73cc1474f1afdce137b27aa934f6fb02fd",
+        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c",
+        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217"
+      ],
+      "retrieval_latency_ms": 22.24,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
+        "context_precision@k": 0.2
+      },
+      "answer": "Vote Rakshak is a Decentralized Voting System with Facial Authentication [source #0].",
+      "cited_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
+        "424de1a5da810c0c3573015cabe95f73cc1474f1afdce137b27aa934f6fb02fd",
+        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c",
+        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217"
+      ],
+      "token_usage": {
+        "prompt_tokens": 2556,
+        "completion_tokens": 20,
+        "total_tokens": 2576
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer directly quotes the context chunk that describes Vote Rakshak as a Decentralized Voting System with Facial Authentication.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer directly addresses the question about the type of system Vote Rakshak is."
+      },
+      "em": 0.0,
+      "f1": 0.4
+    },
+    {
+      "id": "voterakshak-vote-endpoint",
+      "question": "Which API endpoint is used to cast a vote in Vote Rakshak?",
+      "gold_chunk_ids": [
+        "009d3f5115868520833c760b55cd4721989493fbe4d553fac22825423b66afe3"
+      ],
+      "retrieved_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
+        "009d3f5115868520833c760b55cd4721989493fbe4d553fac22825423b66afe3",
+        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c",
+        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217"
+      ],
+      "retrieval_latency_ms": 20.1,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.3333333333333333,
+        "ndcg@k": 0.5,
+        "context_precision@k": 0.2
+      },
+      "answer": "The API endpoint used to cast a vote in Vote Rakshak is `/vote` [source #4].",
+      "cited_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
+        "009d3f5115868520833c760b55cd4721989493fbe4d553fac22825423b66afe3",
+        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c",
+        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217"
+      ],
+      "token_usage": {
+        "prompt_tokens": 2566,
         "completion_tokens": 23,
-        "total_tokens": 479
+        "total_tokens": 2589
       },
       "no_relevant_context": false,
       "judge": {
         "faithfulness": 5,
-        "faithfulness_rationale": "The answer is directly supported by the context chunk, specifically the section on Grounding and citations.",
+        "faithfulness_rationale": "The answer directly quotes a context chunk that explicitly states the API endpoint for casting a vote.",
         "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer fully and directly addresses the question about what a RAG system should do when no retrieved chunk is relevant to the question."
+        "answer_relevance_rationale": "The answer fully and directly responds to the question by providing the specific API endpoint used for casting a vote in Vote Rakshak."
       },
       "em": 0.0,
-      "f1": 0.8148
-    },
-    {
-      "id": "q5",
-      "question": "Which metrics are used to measure retrieval quality in RAG?",
-      "gold_chunk_ids": [
-        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2"
-      ],
-      "retrieved_chunk_ids": [
-        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
-        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377",
-        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875"
-      ],
-      "retrieval_latency_ms": 27.41,
-      "retrieval_metrics": {
-        "recall@k": 1.0,
-        "hit_rate@k": 1.0,
-        "mrr@k": 1.0,
-        "ndcg@k": 1.0,
-        "context_precision@k": 0.3333333333333333
-      },
-      "answer": "Information-retrieval metrics such as Recall@k, Mean Reciprocal Rank (MRR), and normalized Discounted Cumulative Gain (nDCG) are used to measure retrieval quality in RAG [source #0].",
-      "cited_chunk_ids": [
-        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
-        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
-      ],
-      "token_usage": {
-        "prompt_tokens": 773,
-        "completion_tokens": 47,
-        "total_tokens": 820
-      },
-      "no_relevant_context": false,
-      "judge": {
-        "faithfulness": 5,
-        "faithfulness_rationale": "The answer directly quotes the context chunk about RAG evaluation, which mentions the specific metrics used to measure retrieval quality.",
-        "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer fully and directly addresses the question by listing the metrics used to measure retrieval quality in RAG."
-      },
-      "em": 0.0,
-      "f1": 0.6111
+      "f1": 0.1333
     }
   ]
 }
