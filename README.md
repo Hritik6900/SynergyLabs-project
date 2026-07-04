@@ -274,7 +274,7 @@ problem1-rag/
 │   └── logging_utils.py  # per-query JSONL logging
 ├── tests/                # hermetic pytest suite (26 tests, no key needed)
 ├── eval/
-│   ├── questions.json    # 35 verified Q&A + gold chunks (source, chunk_index)
+│   ├── questions.json    # 30 verified Q&A + gold chunks (source, chunk_index)
 │   ├── verify_gold.py    # locates each gold chunk by phrase; --fix corrects indices
 │   ├── retrieval_metrics.py  # Recall@k, Hit Rate, MRR, nDCG, context precision
 │   ├── answer_metrics.py     # LLM-as-judge + EM/F1
@@ -335,21 +335,21 @@ Read it off your own `results/eval_summary.md`:
   grounding prompt, a smaller/tighter context window, lower temperature, or a
   stronger model.
 
-**On this corpus (4 project READMEs, 63 chunks, 35 verified questions, k=5),
+**On this corpus (4 project READMEs, 63 chunks, 30 verified questions, k=5),
 retrieval is the weak link — decisively.** The committed run in
 [`results/eval_summary.md`](results/eval_summary.md) shows:
 
 | Layer | Metric | Value |
 | --- | --- | --- |
-| Retrieval (all 35 Q) | Recall@5 / Hit Rate | **0.71** |
+| Retrieval (all 30 Q) | Recall@5 / Hit Rate | **0.73** |
 | | MRR@5 | **0.49** |
 | | nDCG@5 | 0.55 |
-| Answer (LLM-judge, 8-Q sample) | Faithfulness (1-5) | **4.1** |
-| | Answer relevance (1-5) | **4.5** |
+| Answer (LLM-judge, 8-Q sample) | Faithfulness (1-5) | **5.0** |
+| | Answer relevance (1-5) | **5.0** |
 
-For ~10 of 35 questions the gold chunk never entered the top-5 (Recall 0.71), and
+For ~8 of 30 questions the gold chunk never entered the top-5 (Recall 0.73), and
 MRR 0.49 means even when it *is* retrieved it's often not rank 1. But when the right
-context is retrieved, generation is strong (faithfulness 4.1/5, relevance 4.5/5).
+context is retrieved, generation is strong (faithfulness 5.0/5, relevance 5.0/5).
 **So the bottleneck is retrieval, not generation** — the fix is upstream: a stronger
 embedding model (e.g. `all-mpnet-base-v2`, 768-dim), higher `k`, smaller/cleaner
 chunks (these README chunks are dense with ASCII diagrams and tables that embed
@@ -361,7 +361,7 @@ free-tier rate limit (`--answer-sample`; see below) and used `llama-3.1-8b-insta
 — re-run with the 70B model for higher answer scores once daily quota resets.
 (2) EM = 0.0 with F1 = 0.36 is expected: the model paraphrases correct answers
 rather than matching the terse gold strings, so faithfulness (semantic) is the more
-informative answer metric. (3) Context Precision = 0.14 is expected — each question
+informative answer metric. (3) Context Precision = 0.15 is expected — each question
 has a single gold chunk out of `k=5` retrieved.
 
 ---

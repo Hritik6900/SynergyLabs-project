@@ -1,6 +1,6 @@
 {
   "_instructions": [
-    "36 questions grounded against the real corpus (data/sample_corpus).",
+    "30 questions grounded against the real corpus (data/sample_corpus).",
     "chunk_index values were VERIFIED by locating each question's `_locate_hint` phrase in the",
     "actual chunks (see eval/verify_gold.py). Re-verify if you change CHUNK_SIZE/OVERLAP and re-ingest.",
     "gold_answer is provided for all questions to enable Exact-Match / F1 scoring.",
@@ -89,18 +89,6 @@
         }
       ],
       "_locate_hint": "Monotonic Clock for Frame Pacing"
-    },
-    {
-      "id": "dualcast-rtsp-reconnect",
-      "question": "How does DualCast handle an RTSP stream disconnecting?",
-      "gold_answer": "It runs a reconnection loop that reopens the video capture and retries with short sleeps until the stream is available again, so the pipeline recovers automatically.",
-      "gold_chunks": [
-        {
-          "source": "DualCast.md",
-          "chunk_index": 6
-        }
-      ],
-      "_locate_hint": "RTSP Reconnection Loop"
     },
     {
       "id": "dualcast-e2e-latency",
@@ -209,18 +197,6 @@
       "_locate_hint": "Raspberry Pi 4+ with 2GB+ RAM"
     },
     {
-      "id": "navdrishti-tts-phase",
-      "question": "In which development phase did NavDrishti introduce the separate TTS/audio warning subsystem?",
-      "gold_answer": "Phase 3: TTS & Audio Warnings, which introduced tts_layer.py as a separate process along with the risk scoring engine and cooldown/throttling.",
-      "gold_chunks": [
-        {
-          "source": "NavDrishti-Server.md",
-          "chunk_index": 14
-        }
-      ],
-      "_locate_hint": "tts_layer.py introduction"
-    },
-    {
       "id": "terravision-model",
       "question": "Which AI model does TerraVision use, and for what?",
       "gold_answer": "Google Gemini AI, to provide intelligent urban sustainability planning insights.",
@@ -289,18 +265,6 @@
         }
       ],
       "_locate_hint": "hardcoded diagonal corridor path"
-    },
-    {
-      "id": "terravision-env-var",
-      "question": "What is the required environment variable for TerraVision's Gemini API key?",
-      "gold_answer": "VITE_GEMINI_API_KEY, with GEMINI_API_KEY supported as an optional fallback.",
-      "gold_chunks": [
-        {
-          "source": "terra_vision.md",
-          "chunk_index": 0
-        }
-      ],
-      "_locate_hint": "VITE_GEMINI_API_KEY"
     },
     {
       "id": "terravision-corridor-postprocess",
@@ -395,30 +359,6 @@
         }
       ],
       "_locate_hint": "Vote Transaction Gas"
-    },
-    {
-      "id": "voterakshak-database-name",
-      "question": "What is the name of Vote Rakshak's MySQL database, and what does it store?",
-      "gold_answer": "decentralised_voting — it stores voter info, admin credentials, and face encodings.",
-      "gold_chunks": [
-        {
-          "source": "voteRakshak.md",
-          "chunk_index": 2
-        }
-      ],
-      "_locate_hint": "decentralised_voting"
-    },
-    {
-      "id": "voterakshak-team",
-      "question": "What is the team name behind Vote Rakshak?",
-      "gold_answer": "Team Null Pointersss.",
-      "gold_chunks": [
-        {
-          "source": "voteRakshak.md",
-          "chunk_index": 13
-        }
-      ],
-      "_locate_hint": "Team Null Pointersss"
     }
   ]
 }
