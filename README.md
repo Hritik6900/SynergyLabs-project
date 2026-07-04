@@ -350,12 +350,31 @@ retrieval is the weak link — decisively.** The committed run in
 For ~8 of 30 questions the gold chunk never entered the top-5 (Recall 0.73), and
 MRR 0.49 means even when it *is* retrieved it's often not rank 1. But when the right
 context is retrieved, generation is strong (faithfulness 5.0/5, relevance 5.0/5).
-**So the bottleneck is retrieval, not generation** — the fix is upstream: a stronger
-embedding model (e.g. `all-mpnet-base-v2`, 768-dim), higher `k`, smaller/cleaner
-chunks (these README chunks are dense with ASCII diagrams and tables that embed
-poorly), or hybrid keyword+vector search with reranking.
+**So the bottleneck is retrieval, not generation.**
 
-Notes on the numbers: (1) retrieval metrics cover **all 35** questions; the
+### What actually fixes retrieval here (tested, not assumed)
+
+The obvious lever — "use a bigger embedding model" — was tested and **did not
+work**. Swapping MiniLM-384d for `all-mpnet-base-v2` (768d, ~2× larger) made
+retrieval slightly *worse*:
+
+| Metric | MiniLM-384d (current) | all-mpnet-base-v2-768d |
+| --- | --- | --- |
+| Recall@5 | **0.733** | 0.700 |
+| MRR@5 | **0.492** | 0.364 |
+| nDCG@5 | **0.553** | 0.447 |
+
+Why: both are general *dense* encoders, and many misses are **exact-term** questions
+— config keys (`DEFAULT_RISK_THRESHOLD`), endpoints (`/admin/login_face`), function
+names — where dense semantic similarity struggles *regardless of model size*. A
+bigger dense model can't fix a keyword-matching gap. So the real levers are:
+**hybrid search (BM25 + vector)** to recover exact-term matches, a **retrieval-tuned**
+model (e.g. BGE/GTE with query-instruction prefixing) rather than a general one, and
+**header-aware chunking** so dense ASCII diagrams/tables don't dominate a chunk's
+embedding. Raising `k` also trades precision for recall. (MiniLM is kept as the
+default because it won this head-to-head.)
+
+Notes on the numbers: (1) retrieval metrics cover **all 30** questions; the
 LLM-judge answer-eval ran on an **evenly-spread 8-question sample** to fit the Groq
 free-tier rate limit (`--answer-sample`; see below) and used `llama-3.1-8b-instant`
 — re-run with the 70B model for higher answer scores once daily quota resets.
