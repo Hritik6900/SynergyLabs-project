@@ -1,0 +1,28 @@
+{
+  "config": {
+    "corpus_dir": "/home/hritik/Desktop/SynergyLabs-project-1/problem1-rag/data/sample_corpus",
+    "num_chunks": 63,
+    "num_queries": 5,
+    "k": 5,
+    "repeats": 50,
+    "total_searches_per_store": 250,
+    "embedding": {
+      "provider": "sentence-transformers",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "dimensionality": 384
+    }
+  },
+  "chromadb": {
+    "index": "HNSW (approximate, cosine)",
+    "p50_ms": 6.861,
+    "p95_ms": 7.563,
+    "mean_ms": 6.217
+  },
+  "faiss": {
+    "index": "IndexFlatIP (exact, cosine)",
+    "p50_ms": 0.165,
+    "p95_ms": 0.22,
+    "mean_ms": 0.16
+  },
+  "recall_agreement_at_k": 1.0
+}

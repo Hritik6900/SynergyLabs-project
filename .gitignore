@@ -3,6 +3,7 @@
 
 # Vector store data
 chroma_db/
+_bench_chroma/
 *.sqlite3
 
 # Logs

@@ -191,11 +191,21 @@ class VectorStore:
         found = self._collection.get(ids=ids, include=[])
         return set(found.get("ids", []))
 
-    def add(self, ids: list[str], texts: list[str], metadatas: list[dict]) -> None:
-        """Embed ``texts`` and add them under the given ids + metadata."""
+    def add(
+        self,
+        ids: list[str],
+        texts: list[str],
+        metadatas: list[dict],
+        embeddings: list[list[float]] | None = None,
+    ) -> None:
+        """Add texts under the given ids + metadata.
+
+        Embeds ``texts`` unless precomputed ``embeddings`` are supplied (lets a
+        benchmark embed once and share vectors across backends)."""
         if not ids:
             return
-        embeddings = embed_texts(texts)
+        if embeddings is None:
+            embeddings = embed_texts(texts)
         self._collection.add(
             ids=ids,
             embeddings=embeddings,
@@ -212,15 +222,18 @@ class VectorStore:
         query_text: str,
         k: int,
         where: dict | None = None,
+        query_embedding: list[float] | None = None,
     ) -> list[RetrievedChunk]:
         """Top-k retrieval for ``query_text`` with an optional metadata filter.
 
         ``where`` is a Chroma metadata filter, e.g. {"source": "notes.md"}.
-        Returns hits ordered by descending cosine similarity.
+        Pass ``query_embedding`` to skip embedding (used by benchmarks to time
+        only the search). Returns hits ordered by descending cosine similarity.
         """
         if self.count() == 0:
             return []
-        query_embedding = embed_texts([query_text])[0]
+        if query_embedding is None:
+            query_embedding = embed_texts([query_text])[0]
         result = self._collection.query(
             query_embeddings=[query_embedding],
             n_results=k,
