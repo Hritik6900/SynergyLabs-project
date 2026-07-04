@@ -13,7 +13,40 @@ two stay consistent.
 
 from __future__ import annotations
 
+import time
+
 from .config import settings
+
+# How many times to retry a transient failure, and the base backoff (seconds).
+_MAX_RETRIES = 4
+_BASE_BACKOFF = 2.0
+
+
+def _is_retryable(exc: Exception) -> bool:
+    """True for transient errors worth retrying.
+
+    Per-minute rate limits (TPM) and connection/5xx blips are retryable. A
+    per-DAY token cap (TPD) is not — retrying just wastes time — so we fail fast
+    and let the caller handle it (e.g. the eval harness skips that question).
+    """
+    name = type(exc).__name__.lower()
+    msg = str(exc).lower()
+    if "ratelimit" in name or "429" in msg or "rate_limit" in msg:
+        return not ("per day" in msg or "tpd" in msg)  # retry TPM, not TPD
+    return name in {"apiconnectionerror", "apitimeouterror", "internalservererror"}
+
+
+def _with_retries(fn):
+    delay = _BASE_BACKOFF
+    for attempt in range(_MAX_RETRIES + 1):
+        try:
+            return fn()
+        except Exception as exc:  # noqa: BLE001 - decide by error shape
+            if attempt < _MAX_RETRIES and _is_retryable(exc):
+                time.sleep(delay)
+                delay *= 2  # exponential backoff
+                continue
+            raise
 
 
 def _openai_compatible(base_url: str | None, api_key: str | None, provider: str):
@@ -57,14 +90,16 @@ def chat_complete(
         kwargs = {}
         if json_mode:
             kwargs["response_format"] = {"type": "json_object"}
-        resp = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-            temperature=temperature,
-            **kwargs,
+        resp = _with_retries(
+            lambda: client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user},
+                ],
+                temperature=temperature,
+                **kwargs,
+            )
         )
         text = resp.choices[0].message.content or ""
         usage = {
@@ -80,12 +115,12 @@ def chat_complete(
         if not settings.anthropic_api_key:
             raise RuntimeError("LLM_PROVIDER=anthropic but ANTHROPIC_API_KEY is not set.")
         client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
-        resp = client.messages.create(
+        resp = _with_retries(lambda: client.messages.create(
             model=settings.anthropic_llm_model,
             max_tokens=max_tokens,
             system=system,
             messages=[{"role": "user", "content": user}],
-        )
+        ))
         text = "".join(b.text for b in resp.content if b.type == "text")
         usage = {
             "prompt_tokens": resp.usage.input_tokens,

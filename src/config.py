@@ -57,6 +57,10 @@ class Settings(BaseSettings):
     # ---- Retrieval ----
     top_k: int = 5
     similarity_threshold: float = 0.25
+    # Cap the characters of each chunk injected into the generation prompt (0 =
+    # unlimited). Bounds prompt tokens/latency/cost — useful for very large chunks
+    # (e.g. ASCII diagrams) and for staying under LLM rate limits during eval.
+    max_context_chars_per_chunk: int = 0
 
     # ---- Secrets ----
     openai_api_key: str | None = None

@@ -17,6 +17,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass, field
 
+from .config import settings
 from .embed_store import RetrievedChunk, VectorStore
 from .llm_client import chat_complete
 from .retrieve import relevant_hits, retrieve
@@ -57,10 +58,14 @@ class GenerationResult:
 
 
 def _format_context(hits: list[RetrievedChunk]) -> str:
+    cap = settings.max_context_chars_per_chunk
     blocks = []
     for h in hits:
         label = f"[{h.metadata.get('source')} #{h.metadata.get('chunk_index')}]"
-        blocks.append(f"{label}\n{h.text}")
+        text = h.text
+        if cap and len(text) > cap:
+            text = text[:cap] + " …[truncated]"
+        blocks.append(f"{label}\n{text}")
     return "\n\n".join(blocks)
 
 

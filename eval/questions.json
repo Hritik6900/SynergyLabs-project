@@ -1,62 +1,424 @@
 {
   "_instructions": [
-    "These 8 questions are grounded STARTERS against your real corpus (data/sample_corpus).",
-    "Expand this to 15-30 questions for full eval credit — the brief requires a fixed 15-30 set.",
-    "For each question, mark the GOLD (truly relevant) chunk(s) via gold_chunks [{source, chunk_index}].",
-    "Run `python -m src.cli chunks` to see every chunk's source/chunk_index/id if you re-chunk.",
-    "gold_answer is OPTIONAL: provide it to enable Exact-Match / F1 scoring.",
-    "IMPORTANT: gold chunk_index values assume the current chunk settings (500/50). If you change",
-    "CHUNK_SIZE_TOKENS/CHUNK_OVERLAP_TOKENS, re-ingest and re-check indices with `src.cli chunks`.",
-    "Keys starting with '_' are ignored by the harness."
+    "36 questions grounded against the real corpus (data/sample_corpus).",
+    "chunk_index values were VERIFIED by locating each question's `_locate_hint` phrase in the",
+    "actual chunks (see eval/verify_gold.py). Re-verify if you change CHUNK_SIZE/OVERLAP and re-ingest.",
+    "gold_answer is provided for all questions to enable Exact-Match / F1 scoring.",
+    "`_locate_hint` documents the exact phrase used to pin each gold chunk; harness ignores `_` keys.",
+    "Run `python -m eval.verify_gold` to re-check all indices against the current store."
   ],
   "questions": [
     {
       "id": "dualcast-what",
       "question": "What is DualCast and what problem does it solve?",
       "gold_answer": "DualCast is a privacy-preserving, real-time AI commentary generation system for eSports.",
-      "gold_chunks": [{ "source": "DualCast.md", "chunk_index": 0 }]
+      "gold_chunks": [
+        {
+          "source": "DualCast.md",
+          "chunk_index": 0
+        }
+      ]
     },
     {
       "id": "dualcast-temperature",
       "question": "What sampling temperature does DualCast use for commentary generation, and why?",
       "gold_answer": "Temperature 0.8, for controlled randomness that avoids hallucination while allowing variety.",
-      "gold_chunks": [{ "source": "DualCast.md", "chunk_index": 6 }]
+      "gold_chunks": [
+        {
+          "source": "DualCast.md",
+          "chunk_index": 6
+        }
+      ]
+    },
+    {
+      "id": "dualcast-vlm-frame-sampling",
+      "question": "How many keyframes does DualCast's VLM sample per inference, and at what resolution?",
+      "gold_answer": "It samples 5 keyframes per chunk, resized to 640x360 and JPEG-encoded before being sent to the VLM.",
+      "gold_chunks": [
+        {
+          "source": "DualCast.md",
+          "chunk_index": 2
+        }
+      ],
+      "_locate_hint": "Sample 5 keyframes... Resizes to 640x360"
+    },
+    {
+      "id": "dualcast-tts-cost",
+      "question": "Which TTS provider does DualCast use and what does it cost?",
+      "gold_answer": "ElevenLabs API, at $0.30 USD per 1M characters (roughly $0.02 per hour at 60 WPM).",
+      "gold_chunks": [
+        {
+          "source": "DualCast.md",
+          "chunk_index": 16
+        }
+      ],
+      "_locate_hint": "0.30 USD per 1M chars"
+    },
+    {
+      "id": "dualcast-av-sync-fix",
+      "question": "How did DualCast solve audio-video synchronization issues?",
+      "gold_answer": "By muxing video and audio into a single WebM container in one FFmpeg pass, and setting client-side MSE to sequence mode so timestamps are ignored and chunks play in order.",
+      "gold_chunks": [
+        {
+          "source": "DualCast.md",
+          "chunk_index": 7
+        }
+      ],
+      "_locate_hint": "Single-pass mux"
+    },
+    {
+      "id": "dualcast-broadcast-lock",
+      "question": "How does DualCast prevent one slow client from blocking broadcast to other clients?",
+      "gold_answer": "It releases the async lock before calling websocket.send(), so a slow or hung client's I/O doesn't block delivery to other connected clients.",
+      "gold_chunks": [
+        {
+          "source": "DualCast.md",
+          "chunk_index": 7
+        }
+      ],
+      "_locate_hint": "lock released here"
+    },
+    {
+      "id": "dualcast-monotonic-clock",
+      "question": "Why did DualCast switch from time.time() to time.monotonic() for frame pacing?",
+      "gold_answer": "time.time() is affected by system clock adjustments and caused frame sync drift over long streams; time.monotonic() advances linearly and fixed sync accuracy to about ±50ms.",
+      "gold_chunks": [
+        {
+          "source": "DualCast.md",
+          "chunk_index": 14
+        }
+      ],
+      "_locate_hint": "Monotonic Clock for Frame Pacing"
+    },
+    {
+      "id": "dualcast-rtsp-reconnect",
+      "question": "How does DualCast handle an RTSP stream disconnecting?",
+      "gold_answer": "It runs a reconnection loop that reopens the video capture and retries with short sleeps until the stream is available again, so the pipeline recovers automatically.",
+      "gold_chunks": [
+        {
+          "source": "DualCast.md",
+          "chunk_index": 6
+        }
+      ],
+      "_locate_hint": "RTSP Reconnection Loop"
+    },
+    {
+      "id": "dualcast-e2e-latency",
+      "question": "What is DualCast's typical end-to-end latency from frame capture to client broadcast?",
+      "gold_answer": "Approximately 5-7 seconds from frame capture to broadcast reaching the client.",
+      "gold_chunks": [
+        {
+          "source": "DualCast.md",
+          "chunk_index": 6
+        }
+      ],
+      "_locate_hint": "5-7 seconds from frame capture"
     },
     {
       "id": "navdrishti-purpose",
       "question": "What is the purpose of the NavDrishti smart stick?",
       "gold_answer": "NavDrishti is an AI-powered smart stick application that assists visually impaired users with navigation.",
-      "gold_chunks": [{ "source": "NavDrishti-Server.md", "chunk_index": 0 }]
+      "gold_chunks": [
+        {
+          "source": "NavDrishti-Server.md",
+          "chunk_index": 0
+        }
+      ]
     },
     {
       "id": "navdrishti-cooldown",
       "question": "How does NavDrishti avoid repeating the same audio warning?",
       "gold_answer": "A per-class cooldown so the same detection type won't repeat within 20 seconds, plus a global cooldown of at most one warning per second.",
-      "gold_chunks": [{ "source": "NavDrishti-Server.md", "chunk_index": 7 }]
+      "gold_chunks": [
+        {
+          "source": "NavDrishti-Server.md",
+          "chunk_index": 7
+        }
+      ]
+    },
+    {
+      "id": "navdrishti-models-used",
+      "question": "What YOLO models does NavDrishti run for object and currency detection?",
+      "gold_answer": "yolov8m.onnx as the general fallback model, yolov8n.onnx for lightweight general detection, and a dedicated currency_model.onnx for Indian currency denomination detection.",
+      "gold_chunks": [
+        {
+          "source": "NavDrishti-Server.md",
+          "chunk_index": 1
+        }
+      ],
+      "_locate_hint": "currency_model.onnx"
+    },
+    {
+      "id": "navdrishti-risk-factors",
+      "question": "What factors does NavDrishti's risk scoring engine combine to prioritize warnings?",
+      "gold_answer": "Class priority, proximity, centrality, bounding box area, detection confidence, and stability across consecutive frames.",
+      "gold_chunks": [
+        {
+          "source": "NavDrishti-Server.md",
+          "chunk_index": 5
+        }
+      ],
+      "_locate_hint": "Class priority (car > person > bird)"
+    },
+    {
+      "id": "navdrishti-risk-threshold",
+      "question": "What is the default risk score threshold NavDrishti uses to trigger an audio warning?",
+      "gold_answer": "92.0 — the DEFAULT_RISK_THRESHOLD configuration parameter.",
+      "gold_chunks": [
+        {
+          "source": "NavDrishti-Server.md",
+          "chunk_index": 6
+        }
+      ],
+      "_locate_hint": "Min score to trigger audio warning"
+    },
+    {
+      "id": "navdrishti-onnx-speedup",
+      "question": "How much inference speedup does ONNX Runtime give NavDrishti over the alternative?",
+      "gold_answer": "A 40-60% faster inference speedup.",
+      "gold_chunks": [
+        {
+          "source": "NavDrishti-Server.md",
+          "chunk_index": 7
+        }
+      ],
+      "_locate_hint": "40-60% faster inference"
+    },
+    {
+      "id": "navdrishti-persistence-check",
+      "question": "What persistence requirement must a detection meet before NavDrishti issues a warning?",
+      "gold_answer": "It requires 3 or more consecutive frames, or 2+ seconds, of detection history before triggering a warning.",
+      "gold_chunks": [
+        {
+          "source": "NavDrishti-Server.md",
+          "chunk_index": 7
+        }
+      ],
+      "_locate_hint": "Requires 3+ frames or 2+ seconds"
+    },
+    {
+      "id": "navdrishti-edge-hardware",
+      "question": "What minimum hardware does NavDrishti require for edge deployment?",
+      "gold_answer": "A Raspberry Pi 4 or newer with at least 2GB RAM, ideally 4GB.",
+      "gold_chunks": [
+        {
+          "source": "NavDrishti-Server.md",
+          "chunk_index": 7
+        }
+      ],
+      "_locate_hint": "Raspberry Pi 4+ with 2GB+ RAM"
+    },
+    {
+      "id": "navdrishti-tts-phase",
+      "question": "In which development phase did NavDrishti introduce the separate TTS/audio warning subsystem?",
+      "gold_answer": "Phase 3: TTS & Audio Warnings, which introduced tts_layer.py as a separate process along with the risk scoring engine and cooldown/throttling.",
+      "gold_chunks": [
+        {
+          "source": "NavDrishti-Server.md",
+          "chunk_index": 14
+        }
+      ],
+      "_locate_hint": "tts_layer.py introduction"
     },
     {
       "id": "terravision-model",
       "question": "Which AI model does TerraVision use, and for what?",
       "gold_answer": "Google Gemini AI, to provide intelligent urban sustainability planning insights.",
-      "gold_chunks": [{ "source": "terra_vision.md", "chunk_index": 0 }]
+      "gold_chunks": [
+        {
+          "source": "terra_vision.md",
+          "chunk_index": 0
+        }
+      ]
     },
     {
       "id": "terravision-image-steps",
       "question": "How does TerraVision generate a transformed image using Gemini?",
       "gold_answer": "Convert the image to Base64, send it to Gemini with a transformation prompt requesting TEXT and IMAGE response modalities, then extract the generated image and text.",
-      "gold_chunks": [{ "source": "terra_vision.md", "chunk_index": 4 }]
+      "gold_chunks": [
+        {
+          "source": "terra_vision.md",
+          "chunk_index": 4
+        }
+      ]
+    },
+    {
+      "id": "terravision-image-fallback-chain",
+      "question": "What is TerraVision's fallback chain of image generation models, and why does it use multiple models?",
+      "gold_answer": "gemini-2.5-flash-image, then gemini-3.1-flash-image-preview, then gemini-3-pro-image-preview — used because different API keys have different quota access and it ensures a robust pipeline if the primary model is unavailable.",
+      "gold_chunks": [
+        {
+          "source": "terra_vision.md",
+          "chunk_index": 0
+        }
+      ],
+      "_locate_hint": "gemini-3.1-flash-image-preview"
+    },
+    {
+      "id": "terravision-score-formula",
+      "question": "How does TerraVision calculate a region's green score and heat score?",
+      "gold_answer": "greenScore is clamped between 12 and 98 from a weighted greenness value; heatScore is clamped between 24 and 96, reduced by green cover percentage and solar presence and adjusted by a pressure term.",
+      "gold_chunks": [
+        {
+          "source": "terra_vision.md",
+          "chunk_index": 3
+        }
+      ],
+      "_locate_hint": "greenScore = clamp(12 + greenness"
+    },
+    {
+      "id": "terravision-city-corridors",
+      "question": "How many predefined city-wide green corridor types does TerraVision generate, and using what layout?",
+      "gold_answer": "6 predefined corridor types, generated using a 5x5 grid layout across the city bounds.",
+      "gold_chunks": [
+        {
+          "source": "terra_vision.md",
+          "chunk_index": 3
+        }
+      ],
+      "_locate_hint": "6 predefined corridor types"
+    },
+    {
+      "id": "terravision-json-fallback",
+      "question": "What does TerraVision do if the Gemini response can't be parsed as JSON?",
+      "gold_answer": "It falls back to a pre-computed, hardcoded diagonal corridor path with coordinate clamping applied.",
+      "gold_chunks": [
+        {
+          "source": "terra_vision.md",
+          "chunk_index": 9
+        }
+      ],
+      "_locate_hint": "hardcoded diagonal corridor path"
+    },
+    {
+      "id": "terravision-env-var",
+      "question": "What is the required environment variable for TerraVision's Gemini API key?",
+      "gold_answer": "VITE_GEMINI_API_KEY, with GEMINI_API_KEY supported as an optional fallback.",
+      "gold_chunks": [
+        {
+          "source": "terra_vision.md",
+          "chunk_index": 0
+        }
+      ],
+      "_locate_hint": "VITE_GEMINI_API_KEY"
+    },
+    {
+      "id": "terravision-corridor-postprocess",
+      "question": "What post-processing steps does TerraVision apply to a Gemini-suggested corridor path?",
+      "gold_answer": "Path simplification to a max of 5 waypoints, boundary clamping to the region bounds, obstacle avoidance around trees/solar features, and deduplication of points closer than ~9 meters apart.",
+      "gold_chunks": [
+        {
+          "source": "terra_vision.md",
+          "chunk_index": 2
+        }
+      ],
+      "_locate_hint": "simplifyToMaxPoints"
     },
     {
       "id": "voterakshak-type",
       "question": "What type of system is Vote Rakshak?",
       "gold_answer": "A decentralized, blockchain-based voting system.",
-      "gold_chunks": [{ "source": "voteRakshak.md", "chunk_index": 0 }]
+      "gold_chunks": [
+        {
+          "source": "voteRakshak.md",
+          "chunk_index": 0
+        }
+      ]
     },
     {
       "id": "voterakshak-vote-endpoint",
       "question": "Which API endpoint is used to cast a vote in Vote Rakshak?",
       "gold_answer": "POST /vote",
-      "gold_chunks": [{ "source": "voteRakshak.md", "chunk_index": 4 }]
+      "gold_chunks": [
+        {
+          "source": "voteRakshak.md",
+          "chunk_index": 4
+        }
+      ]
+    },
+    {
+      "id": "voterakshak-duplicate-face",
+      "question": "How does Vote Rakshak's smart contract prevent the same face from registering twice?",
+      "gold_answer": "It requires that the faceHash is not already present in the registeredFace mapping before allowing registration, reverting with 'Face already registered' otherwise.",
+      "gold_chunks": [
+        {
+          "source": "voteRakshak.md",
+          "chunk_index": 3
+        }
+      ],
+      "_locate_hint": "Face already registered"
+    },
+    {
+      "id": "voterakshak-double-vote",
+      "question": "How does Vote Rakshak's smart contract prevent double voting?",
+      "gold_answer": "It checks both hasVoted[enrollment] and usedFace[faceHash] before allowing a vote, reverting the transaction if either has already been used.",
+      "gold_chunks": [
+        {
+          "source": "voteRakshak.md",
+          "chunk_index": 3
+        }
+      ],
+      "_locate_hint": "You already voted (enrollment)"
+    },
+    {
+      "id": "voterakshak-admin-face-login",
+      "question": "Which endpoint handles the face-verification step of Vote Rakshak's admin login?",
+      "gold_answer": "POST /admin/login_face, which verifies the admin's face and issues a JWT token.",
+      "gold_chunks": [
+        {
+          "source": "voteRakshak.md",
+          "chunk_index": 4
+        }
+      ],
+      "_locate_hint": "/admin/login_face"
+    },
+    {
+      "id": "voterakshak-face-capture-frames",
+      "question": "How many stable frames does Vote Rakshak's FaceMesh require before auto-capturing a voter's face?",
+      "gold_answer": "35 or more stable frames, followed by a 3-second countdown before auto-capture.",
+      "gold_chunks": [
+        {
+          "source": "voteRakshak.md",
+          "chunk_index": 4
+        }
+      ],
+      "_locate_hint": "35+ frames"
+    },
+    {
+      "id": "voterakshak-gas-cost",
+      "question": "What is the approximate gas cost of a vote transaction in Vote Rakshak?",
+      "gold_answer": "Approximately 150,000 to 350,000 gas.",
+      "gold_chunks": [
+        {
+          "source": "voteRakshak.md",
+          "chunk_index": 12
+        }
+      ],
+      "_locate_hint": "Vote Transaction Gas"
+    },
+    {
+      "id": "voterakshak-database-name",
+      "question": "What is the name of Vote Rakshak's MySQL database, and what does it store?",
+      "gold_answer": "decentralised_voting — it stores voter info, admin credentials, and face encodings.",
+      "gold_chunks": [
+        {
+          "source": "voteRakshak.md",
+          "chunk_index": 2
+        }
+      ],
+      "_locate_hint": "decentralised_voting"
+    },
+    {
+      "id": "voterakshak-team",
+      "question": "What is the team name behind Vote Rakshak?",
+      "gold_answer": "Team Null Pointersss.",
+      "gold_chunks": [
+        {
+          "source": "voteRakshak.md",
+          "chunk_index": 13
+        }
+      ],
+      "_locate_hint": "Team Null Pointersss"
     }
   ]
 }

@@ -110,6 +110,7 @@ def run(questions_path: str, k: int, threshold: float) -> dict:
     faithfulness_scores: list[int] = []
     relevance_scores: list[int] = []
     all_warnings: list[str] = []
+    answer_errors: list[str] = []  # question ids whose LLM answer-eval failed
 
     for q in questions:
         qid = q.get("id", q["question"][:40])
@@ -137,37 +138,46 @@ def run(questions_path: str, k: int, threshold: float) -> dict:
         }
 
         # --- Answer generation + answer metrics (only if an LLM is configured) ---
+        # Wrapped so a per-question LLM failure (e.g. Groq daily token cap) records
+        # the error and continues — retrieval metrics + latency above are always
+        # produced for every question regardless of LLM availability.
         if llm_on:
-            result = generate_answer(q["question"], k=k, threshold=threshold, store=store)
-            entry["answer"] = result.answer
-            entry["cited_chunk_ids"] = [c["chunk_id"] for c in result.cited_chunks]
-            entry["token_usage"] = result.token_usage
-            entry["no_relevant_context"] = result.no_relevant_context
+            try:
+                result = generate_answer(q["question"], k=k, threshold=threshold, store=store)
+                entry["answer"] = result.answer
+                entry["cited_chunk_ids"] = [c["chunk_id"] for c in result.cited_chunks]
+                entry["token_usage"] = result.token_usage
+                entry["no_relevant_context"] = result.no_relevant_context
 
-            # LLM-as-judge (skip when there was no context to ground on).
-            if result.cited_chunks:
-                context = "\n\n".join(
-                    f"[{c['source']} #{c['chunk_index']}]\n{c['text']}"
-                    for c in result.cited_chunks
-                )
-                judge = am.llm_judge(q["question"], context, result.answer)
-                entry["judge"] = judge
-                if isinstance(judge.get("faithfulness"), int):
-                    faithfulness_scores.append(judge["faithfulness"])
-                if isinstance(judge.get("answer_relevance"), int):
-                    relevance_scores.append(judge["answer_relevance"])
-            else:
-                entry["judge"] = {"note": "no context retrieved above threshold; judge skipped"}
+                # LLM-as-judge (skip when there was no context to ground on).
+                if result.cited_chunks:
+                    context = "\n\n".join(
+                        f"[{c['source']} #{c['chunk_index']}]\n{c['text']}"
+                        for c in result.cited_chunks
+                    )
+                    judge = am.llm_judge(q["question"], context, result.answer)
+                    entry["judge"] = judge
+                    if isinstance(judge.get("faithfulness"), int):
+                        faithfulness_scores.append(judge["faithfulness"])
+                    if isinstance(judge.get("answer_relevance"), int):
+                        relevance_scores.append(judge["answer_relevance"])
+                else:
+                    entry["judge"] = {"note": "no context retrieved above threshold; judge skipped"}
 
-            # EM / F1 vs gold answer, if provided.
-            gold_answer = q.get("gold_answer")
-            if gold_answer:
-                em = am.exact_match(result.answer, gold_answer)
-                f1 = am.token_f1(result.answer, gold_answer)
-                entry["em"] = em
-                entry["f1"] = round(f1, 4)
-                em_scores.append(em)
-                f1_scores.append(f1)
+                # EM / F1 vs gold answer, if provided.
+                gold_answer = q.get("gold_answer")
+                if gold_answer:
+                    em = am.exact_match(result.answer, gold_answer)
+                    f1 = am.token_f1(result.answer, gold_answer)
+                    entry["em"] = em
+                    entry["f1"] = round(f1, 4)
+                    em_scores.append(em)
+                    f1_scores.append(f1)
+            except Exception as exc:  # noqa: BLE001 - keep the run alive
+                msg = f"{type(exc).__name__}: {str(exc)[:200]}"
+                entry["answer_error"] = msg
+                answer_errors.append(qid)
+                print(f"  [warn] answer eval failed for {qid}: {msg}", file=sys.stderr)
 
         per_question_results.append(entry)
 
@@ -193,6 +203,9 @@ def run(questions_path: str, k: int, threshold: float) -> dict:
             if relevance_scores else None
         )
         answer_summary["judged_questions"] = len(faithfulness_scores)
+        answer_summary["answer_eval_failures"] = len(answer_errors)
+        if answer_errors:
+            answer_summary["failed_question_ids"] = answer_errors
         if em_scores:
             answer_summary["exact_match"] = round(sum(em_scores) / len(em_scores), 3)
             answer_summary["token_f1"] = round(sum(f1_scores) / len(f1_scores), 3)
