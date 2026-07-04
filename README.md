@@ -215,6 +215,39 @@ retrieval latency**.
 
 ---
 
+## Tests
+
+A hermetic pytest suite (no API key / network — uses the deterministic local
+embedder and throwaway temp stores) covers the tricky logic:
+
+```bash
+pip install pytest
+python -m pytest          # 26 tests: chunking, idempotency, IR metrics, EM/F1,
+                          # store add/query/filter, no-context guard, FAISS parity
+```
+
+Covered: chunk sizing/overlap/coverage, deterministic ids + idempotent re-ingest,
+Recall@k / MRR / nDCG / context-precision against hand-computed values, EM/F1
+normalization, metadata-filtered retrieval, the "no relevant context" guard, and
+ChromaDB-vs-FAISS top-k agreement.
+
+## Bonus: benchmarking a second store (FAISS)
+
+Beyond the required single store, a second backend ([`src/faiss_store.py`](src/faiss_store.py),
+an in-memory **exact** `IndexFlatIP`) is benchmarked against ChromaDB's approximate
+HNSW on the **same embeddings + same query vectors**:
+
+```bash
+python results/store_benchmark.py --k 5 --repeats 50   # -> results/store_benchmark.md
+```
+
+It reports per-search **p50/p95 latency** for each store and **recall agreement@k**
+(how much of FAISS's exact top-k ChromaDB's approximate index also returns — i.e.
+what the approximation costs). See [`results/store_benchmark.md`](results/store_benchmark.md).
+Takeaway: FAISS is faster raw but is *just an index* (no persistence, metadata, or
+filtering); ChromaDB bundles those, which is why it's the primary store and FAISS
+is the yardstick.
+
 ## Project layout
 
 ```
@@ -226,9 +259,12 @@ problem1-rag/
 │   ├── embed_store.py    # OpenAI + local embeddings; ChromaDB (cosine) wrapper
 │   ├── retrieve.py       # top-k retrieval + threshold policy + metadata filter
 │   ├── generate.py       # grounded, cited generation; no-context guard
+│   ├── llm_client.py     # one entry point for openai / groq / anthropic chat
+│   ├── faiss_store.py    # second store backend (exact) for the benchmark
 │   ├── api.py            # FastAPI: /ingest, /query, /health, /stats
 │   ├── cli.py            # ingest / query / stats / chunks
 │   └── logging_utils.py  # per-query JSONL logging
+├── tests/                # hermetic pytest suite (26 tests, no key needed)
 ├── eval/
 │   ├── questions.json    # your 15-30 Q&A + gold chunks (template + examples)
 │   ├── retrieval_metrics.py  # Recall@k, Hit Rate, MRR, nDCG, context precision
@@ -237,6 +273,8 @@ problem1-rag/
 ├── results/
 │   ├── cost_analysis.py      # generates the cost table
 │   ├── cost_comparison.md    # generated
+│   ├── store_benchmark.py    # ChromaDB vs FAISS benchmark (bonus)
+│   ├── store_benchmark.md    # generated
 │   ├── eval_results.json     # generated
 │   └── eval_summary.md       # generated
 ├── data/sample_corpus/   # runnable-out-of-the-box sample docs
