@@ -42,17 +42,10 @@ from eval import retrieval_metrics as rm  # noqa: E402
 from src.config import settings  # noqa: E402
 from src.embed_store import VectorStore, embedding_info  # noqa: E402
 from src.generate import generate_answer  # noqa: E402
+from src.llm_client import llm_available  # noqa: E402
 from src.retrieve import retrieve  # noqa: E402
 
 RESULTS_DIR = os.path.join(_ROOT, "results")
-
-
-def _llm_available() -> bool:
-    if settings.llm_provider == "openai":
-        return bool(settings.openai_api_key)
-    if settings.llm_provider == "anthropic":
-        return bool(settings.anthropic_api_key)
-    return False
 
 
 def _build_gold_index(store: VectorStore) -> dict[tuple[str, int], str]:
@@ -102,7 +95,12 @@ def run(questions_path: str, k: int, threshold: float) -> dict:
         raise RuntimeError(f"No questions found in {questions_path}")
 
     gold_index = _build_gold_index(store)
-    llm_on = _llm_available()
+    llm_on = llm_available()
+
+    # Warm up the embedding model + index once (untimed). Local models
+    # (sentence-transformers) pay a one-time load cost on first encode; excluding
+    # it makes p50/p95 reflect steady-state per-query retrieval, not startup.
+    retrieve("warmup query", k=k, store=store)
 
     per_question_results: list[dict] = []
     retrieval_metric_rows: list[dict] = []
@@ -206,11 +204,7 @@ def run(questions_path: str, k: int, threshold: float) -> dict:
             "similarity_threshold": threshold,
             "embedding": embedding_info(),
             "llm_provider": settings.llm_provider,
-            "llm_model": (
-                settings.openai_llm_model
-                if settings.llm_provider == "openai"
-                else settings.anthropic_llm_model
-            ),
+            "llm_model": settings.active_llm_model(),
             "num_questions": len(questions),
             "num_chunks_in_store": store.count(),
         },

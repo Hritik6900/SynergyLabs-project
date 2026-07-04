@@ -13,6 +13,8 @@ Monthly cost to **store and serve** an index of N vectors, comparing a self-host
 - **Pinecone pods**: always-on standard pod ~$80/month, ~500,000 vectors/pod at 1536-dim.
 - Prices are published US list rates as of Jan 2026 and are approximate; the point is the *shape* of the curve, not the last dollar.
 
+> Note: this table uses the **conservative** 1536-dim assumption. This project's default embeddings are local `all-MiniLM-L6-v2` at **384-dim** — 4x smaller vectors, so storage/RAM (and thus the ChromaDB VM cost) are roughly **4x lower** than shown. The 1536-dim figures are the upper bound.
+
 ## Index sizing per scale
 
 | Vectors | Raw vectors | Index in RAM (~2x) | On-disk |

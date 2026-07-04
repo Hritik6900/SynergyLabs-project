@@ -3,12 +3,12 @@
     "k": 3,
     "similarity_threshold": 0.25,
     "embedding": {
-      "provider": "local",
-      "model": "local-hash-1536d",
-      "dimensionality": 1536
+      "provider": "sentence-transformers",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "dimensionality": 384
     },
-    "llm_provider": "openai",
-    "llm_model": "gpt-4o-mini",
+    "llm_provider": "groq",
+    "llm_model": "llama-3.3-70b-versatile",
     "num_questions": 5,
     "num_chunks_in_store": 3
   },
@@ -24,10 +24,10 @@
   },
   "latency": {
     "count": 5,
-    "p50_ms": 2.78,
-    "p95_ms": 12.0,
-    "mean_ms": 5.12,
-    "max_ms": 14.16
+    "p50_ms": 23.01,
+    "p95_ms": 35.04,
+    "mean_ms": 26.12,
+    "max_ms": 35.65
   },
   "warnings": [],
   "per_question": [
@@ -39,10 +39,10 @@
       ],
       "retrieved_chunk_ids": [
         "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377",
-        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875",
-        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2"
+        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
+        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875"
       ],
-      "retrieval_latency_ms": 14.16,
+      "retrieval_latency_ms": 20.77,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
@@ -62,7 +62,7 @@
         "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377",
         "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2"
       ],
-      "retrieval_latency_ms": 2.62,
+      "retrieval_latency_ms": 18.54,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
@@ -78,16 +78,16 @@
         "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875"
       ],
       "retrieved_chunk_ids": [
-        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875",
         "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
+        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875",
         "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
       ],
-      "retrieval_latency_ms": 2.78,
+      "retrieval_latency_ms": 23.01,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
-        "mrr@k": 1.0,
-        "ndcg@k": 1.0,
+        "mrr@k": 0.5,
+        "ndcg@k": 0.6309297535714575,
         "context_precision@k": 0.3333333333333333
       }
     },
@@ -102,7 +102,7 @@
         "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875",
         "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
       ],
-      "retrieval_latency_ms": 3.33,
+      "retrieval_latency_ms": 35.65,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
@@ -118,16 +118,16 @@
         "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2"
       ],
       "retrieved_chunk_ids": [
-        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377",
         "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
+        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377",
         "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875"
       ],
-      "retrieval_latency_ms": 2.7,
+      "retrieval_latency_ms": 32.63,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
-        "mrr@k": 0.5,
-        "ndcg@k": 0.6309297535714575,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
         "context_precision@k": 0.3333333333333333
       }
     }

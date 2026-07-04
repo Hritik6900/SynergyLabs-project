@@ -17,8 +17,8 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass, field
 
-from .config import settings
 from .embed_store import RetrievedChunk, VectorStore
+from .llm_client import chat_complete
 from .retrieve import relevant_hits, retrieve
 
 NO_CONTEXT_MESSAGE = "no relevant context found"
@@ -64,61 +64,10 @@ def _format_context(hits: list[RetrievedChunk]) -> str:
     return "\n\n".join(blocks)
 
 
-# --------------------------------------------------------------------------- #
-# LLM backends                                                                 #
-# --------------------------------------------------------------------------- #
-def _call_openai(context: str, question: str) -> tuple[str, dict]:
-    from openai import OpenAI
-
-    if not settings.openai_api_key:
-        raise RuntimeError("LLM_PROVIDER=openai but OPENAI_API_KEY is not set.")
-    client = OpenAI(api_key=settings.openai_api_key)
-    user_prompt = f"Context chunks:\n\n{context}\n\nQuestion: {question}"
-    resp = client.chat.completions.create(
-        model=settings.openai_llm_model,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_prompt},
-        ],
-        temperature=0,
-    )
-    answer = resp.choices[0].message.content or ""
-    usage = {
-        "prompt_tokens": resp.usage.prompt_tokens,
-        "completion_tokens": resp.usage.completion_tokens,
-        "total_tokens": resp.usage.total_tokens,
-    }
-    return answer.strip(), usage
-
-
-def _call_anthropic(context: str, question: str) -> tuple[str, dict]:
-    import anthropic
-
-    if not settings.anthropic_api_key:
-        raise RuntimeError("LLM_PROVIDER=anthropic but ANTHROPIC_API_KEY is not set.")
-    client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
-    user_prompt = f"Context chunks:\n\n{context}\n\nQuestion: {question}"
-    resp = client.messages.create(
-        model=settings.anthropic_llm_model,
-        max_tokens=1024,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_prompt}],
-    )
-    answer = "".join(block.text for block in resp.content if block.type == "text")
-    usage = {
-        "prompt_tokens": resp.usage.input_tokens,
-        "completion_tokens": resp.usage.output_tokens,
-        "total_tokens": resp.usage.input_tokens + resp.usage.output_tokens,
-    }
-    return answer.strip(), usage
-
-
 def _call_llm(context: str, question: str) -> tuple[str, dict]:
-    if settings.llm_provider == "openai":
-        return _call_openai(context, question)
-    if settings.llm_provider == "anthropic":
-        return _call_anthropic(context, question)
-    raise ValueError(f"Unknown LLM_PROVIDER: {settings.llm_provider!r}")
+    """Grounded generation via the configured provider (openai/groq/anthropic)."""
+    user_prompt = f"Context chunks:\n\n{context}\n\nQuestion: {question}"
+    return chat_complete(SYSTEM_PROMPT, user_prompt)
 
 
 # --------------------------------------------------------------------------- #

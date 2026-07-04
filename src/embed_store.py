@@ -55,6 +55,32 @@ def _embed_openai(texts: list[str]) -> list[list[float]]:
     return [d.embedding for d in resp.data]
 
 
+_st_model = None  # lazily constructed sentence-transformers model
+
+
+def _get_st_model():
+    global _st_model
+    if _st_model is None:
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError as exc:  # pragma: no cover - optional dependency
+            raise RuntimeError(
+                "EMBEDDING_PROVIDER=sentence-transformers requires the "
+                "'sentence-transformers' package. Install it with:\n"
+                "  pip install sentence-transformers"
+            ) from exc
+        _st_model = SentenceTransformer(settings.st_embedding_model)
+    return _st_model
+
+
+def _embed_sentence_transformers(texts: list[str]) -> list[list[float]]:
+    """Local CPU embeddings via sentence-transformers (free, no API key)."""
+    model = _get_st_model()
+    # normalize so cosine space behaves well; returns a numpy array.
+    vectors = model.encode(texts, normalize_embeddings=True, convert_to_numpy=True)
+    return vectors.tolist()
+
+
 def _embed_local(texts: list[str]) -> list[list[float]]:
     """Deterministic hashing-trick embedding.
 
@@ -89,6 +115,8 @@ def embed_texts(texts: list[str]) -> list[list[float]]:
         return []
     if settings.embedding_provider == "openai":
         return _embed_openai(texts)
+    if settings.embedding_provider == "sentence-transformers":
+        return _embed_sentence_transformers(texts)
     if settings.embedding_provider == "local":
         return _embed_local(texts)
     raise ValueError(f"Unknown EMBEDDING_PROVIDER: {settings.embedding_provider!r}")
@@ -96,15 +124,18 @@ def embed_texts(texts: list[str]) -> list[list[float]]:
 
 def embedding_info() -> dict:
     """Human-readable record of the embedding model + dimensionality."""
-    if settings.embedding_provider == "openai":
+    provider = settings.embedding_provider
+    if provider == "openai":
         model = settings.embedding_model
+        dim = 1536
+    elif provider == "sentence-transformers":
+        model = settings.st_embedding_model
+        # Ask the loaded model for its true output dimension.
+        dim = _get_st_model().get_sentence_embedding_dimension()
     else:
         model = f"local-hash-{settings.embedding_dim}d"
-    return {
-        "provider": settings.embedding_provider,
-        "model": model,
-        "dimensionality": settings.embedding_dimensionality(),
-    }
+        dim = settings.embedding_dim
+    return {"provider": provider, "model": model, "dimensionality": dim}
 
 
 # --------------------------------------------------------------------------- #

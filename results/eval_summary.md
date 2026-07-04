@@ -4,8 +4,8 @@
 
 - Questions: **5**  |  Chunks in store: **3**
 - Retrieval k: **3**  |  Similarity threshold: **0.25**
-- Embedding: **local-hash-1536d** (1536-dim, provider=local)
-- LLM: **openai / gpt-4o-mini**
+- Embedding: **sentence-transformers/all-MiniLM-L6-v2** (384-dim, provider=sentence-transformers)
+- LLM: **groq / llama-3.3-70b-versatile**
 
 ## Retrieval quality (mean across questions)
 
@@ -25,7 +25,7 @@ _LLM-as-judge disabled (no LLM API key configured). Retrieval + latency were sti
 
 | Metric | ms |
 | --- | --- |
-| p50 | 2.78 |
-| p95 | 12.0 |
-| mean | 5.12 |
-| max | 14.16 |
+| p50 | 23.01 |
+| p95 | 35.04 |
+| mean | 26.12 |
+| max | 35.65 |

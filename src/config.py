@@ -34,17 +34,25 @@ class Settings(BaseSettings):
     chunk_overlap_tokens: int = 50
 
     # ---- Embeddings ----
-    # "openai" uses text-embedding-3-small (1536-dim). "local" uses a deterministic
-    # hash embedding so the whole pipeline runs offline with zero API spend — useful
-    # for tests, CI, and proving idempotency without a key.
+    # Providers:
+    #   "openai"                -> text-embedding-3-small (1536-dim), needs OPENAI_API_KEY.
+    #   "sentence-transformers" -> a local CPU model (default 384-dim), free, no key.
+    #   "local"                 -> deterministic hash embedding, offline, zero deps,
+    #                              low quality (smoke tests / CI only).
     embedding_provider: str = "openai"
     embedding_model: str = "text-embedding-3-small"
-    embedding_dim: int = 1536
+    embedding_dim: int = 1536  # used by the "local" hash provider
+    # Model used when embedding_provider == "sentence-transformers".
+    st_embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
 
     # ---- Generation ----
-    llm_provider: str = "openai"  # "openai" | "anthropic"
+    # "openai" | "groq" | "anthropic". Groq is OpenAI-compatible (chat only) and is
+    # used via the OpenAI SDK with GROQ_BASE_URL.
+    llm_provider: str = "openai"
     openai_llm_model: str = "gpt-4o-mini"
     anthropic_llm_model: str = "claude-haiku-4-5"
+    groq_llm_model: str = "llama-3.3-70b-versatile"
+    groq_base_url: str = "https://api.groq.com/openai/v1"
 
     # ---- Retrieval ----
     top_k: int = 5
@@ -53,15 +61,28 @@ class Settings(BaseSettings):
     # ---- Secrets ----
     openai_api_key: str | None = None
     anthropic_api_key: str | None = None
+    groq_api_key: str | None = None
 
     # ---- Logging ----
     query_log_path: str = "./logs/queries.log"
 
     def embedding_dimensionality(self) -> int:
-        """Effective embedding dimensionality (openai fixes this at 1536)."""
+        """Effective embedding dimensionality.
+
+        openai fixes 1536; sentence-transformers is model-dependent (resolved at
+        runtime by the store); the local hash provider uses embedding_dim.
+        """
         if self.embedding_provider == "openai":
             return 1536
         return self.embedding_dim
+
+    def active_llm_model(self) -> str:
+        """The model name for the configured LLM provider."""
+        return {
+            "openai": self.openai_llm_model,
+            "groq": self.groq_llm_model,
+            "anthropic": self.anthropic_llm_model,
+        }.get(self.llm_provider, self.llm_provider)
 
 
 @lru_cache

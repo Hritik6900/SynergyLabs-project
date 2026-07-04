@@ -26,15 +26,15 @@ import re
 import string
 from collections import Counter
 
-# Import the app's config. Works whether run as a module or a script.
+# Import from the app package. Works whether run as a module or a script.
 try:
-    from src.config import settings
+    from src.llm_client import chat_complete
 except ImportError:  # pragma: no cover - fallback for direct execution
     import os
     import sys
 
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from src.config import settings
+    from src.llm_client import chat_complete
 
 
 # --------------------------------------------------------------------------- #
@@ -109,45 +109,17 @@ def _extract_json(text: str) -> dict | None:
     return None
 
 
-def _judge_openai(question: str, context: str, answer: str) -> str:
-    from openai import OpenAI
-
-    client = OpenAI(api_key=settings.openai_api_key)
-    resp = client.chat.completions.create(
-        model=settings.openai_llm_model,
-        messages=[
-            {"role": "system", "content": _JUDGE_SYSTEM},
-            {"role": "user", "content": _judge_prompt(question, context, answer)},
-        ],
-        temperature=0,
-        response_format={"type": "json_object"},
-    )
-    return resp.choices[0].message.content or ""
-
-
-def _judge_anthropic(question: str, context: str, answer: str) -> str:
-    import anthropic
-
-    client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
-    resp = client.messages.create(
-        model=settings.anthropic_llm_model,
-        max_tokens=512,
-        system=_JUDGE_SYSTEM,
-        messages=[{"role": "user", "content": _judge_prompt(question, context, answer)}],
-    )
-    return "".join(b.text for b in resp.content if b.type == "text")
-
-
 def llm_judge(question: str, context: str, answer: str) -> dict:
-    """Score faithfulness + relevance via the configured LLM. Returns a dict with
-    integer 1-5 scores (or None on parse failure) plus rationales."""
-    if settings.llm_provider == "openai":
-        raw = _judge_openai(question, context, answer)
-    elif settings.llm_provider == "anthropic":
-        raw = _judge_anthropic(question, context, answer)
-    else:
-        raise ValueError(f"Unknown LLM_PROVIDER: {settings.llm_provider!r}")
+    """Score faithfulness + relevance via the configured LLM (openai/groq/anthropic).
 
+    Returns a dict with integer 1-5 scores (or None on parse failure) plus
+    rationales."""
+    raw, _usage = chat_complete(
+        _JUDGE_SYSTEM,
+        _judge_prompt(question, context, answer),
+        json_mode=True,
+        max_tokens=512,
+    )
     parsed = _extract_json(raw)
     if not parsed:
         return {

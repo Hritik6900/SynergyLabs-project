@@ -62,11 +62,7 @@ def health() -> dict:
         "status": "ok",
         "embedding": embedding_info(),
         "llm_provider": settings.llm_provider,
-        "llm_model": (
-            settings.openai_llm_model
-            if settings.llm_provider == "openai"
-            else settings.anthropic_llm_model
-        ),
+        "llm_model": settings.active_llm_model(),
         "top_k": settings.top_k,
         "similarity_threshold": settings.similarity_threshold,
     }

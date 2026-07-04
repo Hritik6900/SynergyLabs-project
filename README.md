@@ -5,10 +5,16 @@ vector store (ChromaDB)**, with honest evaluation of retrieval quality, answer
 quality, latency, and cost.
 
 - **Store:** ChromaDB persistent client (embedded, on-disk, no server process).
-- **Embeddings:** OpenAI `text-embedding-3-small` (1536-dim) — or a deterministic
-  local fallback so the whole pipeline runs **offline with zero spend**.
-- **Generation:** OpenAI `gpt-4o-mini` **or** Anthropic `claude-haiku-4-5`
-  (configurable via env).
+- **Embeddings** (`EMBEDDING_PROVIDER`):
+  - `sentence-transformers` — local CPU model (`all-MiniLM-L6-v2`, 384-dim), free, no key **(default)**.
+  - `openai` — `text-embedding-3-small` (1536-dim).
+  - `local` — deterministic hash embedding, offline/zero-deps, low quality (smoke tests only).
+- **Generation** (`LLM_PROVIDER`): `groq` (`llama-3.3-70b-versatile`, default) ·
+  `openai` (`gpt-4o-mini`) · `anthropic` (`claude-haiku-4-5`). Groq is chat-only
+  (OpenAI-compatible); it has **no embeddings endpoint**, which is why embeddings
+  are handled separately.
+- **Default stack is fully free to embed:** local sentence-transformers embeddings
+  + Groq generation → the only paid call is Groq generation (and Groq has a free tier).
 - **Interface:** FastAPI HTTP endpoints **and** a CLI.
 
 ---
@@ -31,30 +37,35 @@ numbers, including where a managed serverless option actually wins.
 ```bash
 cd problem1-rag
 python3 -m venv .venv && source .venv/bin/activate
+# CPU-only torch first keeps the sentence-transformers install small:
+pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install -r requirements.txt
 cp .env.example .env          # then edit .env
 ```
 
-### Two ways to run
+### Recommended: Groq generation + local sentence-transformers embeddings
 
-**A) Fully offline (no API key, zero spend)** — great for a first smoke test. In
-`.env` set:
-
-```
-EMBEDDING_PROVIDER=local
-```
-
-Local embeddings are deterministic (hashing trick), so ingestion, idempotency,
-retrieval, the IR metrics, and latency all work end-to-end without a key. (Answer
-generation and the LLM-as-judge still need an LLM key — see B.)
-
-**B) Real embeddings + generation** — set your keys and provider in `.env`:
+The default `.env.example` is already set to this. Just add a Groq key
+(free tier at <https://console.groq.com>):
 
 ```
-EMBEDDING_PROVIDER=openai
-OPENAI_API_KEY=sk-...
-LLM_PROVIDER=openai            # or: anthropic (needs ANTHROPIC_API_KEY)
+EMBEDDING_PROVIDER=sentence-transformers   # free, local, no key
+LLM_PROVIDER=groq
+GROQ_API_KEY=gsk_...
 ```
+
+Embeddings run locally on CPU (zero API cost); only generation calls Groq. The
+first query loads the embedding model once (~a few seconds), then per-query
+retrieval is ~20-35 ms.
+
+### Other supported combinations
+
+- **Fully offline smoke test (no key at all):** `EMBEDDING_PROVIDER=local`. Ingestion,
+  idempotency, retrieval, IR metrics, and latency all run; generation + LLM-judge
+  are skipped (they need an LLM key). Hash embeddings are low quality — smoke tests only.
+- **OpenAI embeddings and/or generation:** `EMBEDDING_PROVIDER=openai` + `OPENAI_API_KEY`,
+  and/or `LLM_PROVIDER=openai`. `text-embedding-3-small` is best-quality and costs ~cents.
+- **Anthropic generation:** `LLM_PROVIDER=anthropic` + `ANTHROPIC_API_KEY`.
 
 > All configuration is via env vars; **no secrets are hardcoded**. `.env` is
 > gitignored.

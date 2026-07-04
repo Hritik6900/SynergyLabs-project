@@ -8,9 +8,14 @@ pydantic-settings==2.7.1   # env-var driven config
 python-dotenv==1.0.1       # load .env in local dev
 
 # --- Embeddings + generation (providers are optional at runtime) ---
-openai==1.59.6             # text-embedding-3-small + gpt-4o-mini
+openai==1.59.6             # OpenAI embeddings/generation; also used for Groq (OpenAI-compatible)
 anthropic==0.42.0          # claude-haiku generation (alternative LLM)
 tiktoken==0.8.0            # token-accurate chunking
+
+# Local, free embeddings (EMBEDDING_PROVIDER=sentence-transformers). Pulls torch;
+# install the CPU-only build first to keep it small:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+sentence-transformers==3.3.1
 
 # --- Document loading ---
 pypdf==5.1.0               # PDF text extraction

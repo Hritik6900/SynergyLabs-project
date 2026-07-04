@@ -110,6 +110,12 @@ def build_report() -> str:
     lines.append(f"- **Pinecone serverless**: storage ${PINECONE_STORAGE_USD_PER_GB_MONTH}/GB-month + reads ${PINECONE_READ_USD_PER_MILLION_RU}/M read-units (~{PINECONE_READ_UNITS_PER_QUERY:.0f} RU/query); steady-state writes excluded.")
     lines.append(f"- **Pinecone pods**: always-on standard pod ~${PINECONE_POD_USD_PER_MONTH:.0f}/month, ~{PINECONE_VECTORS_PER_POD_1536:,} vectors/pod at {EMBEDDING_DIM}-dim.")
     lines.append("- Prices are published US list rates as of Jan 2026 and are approximate; the point is the *shape* of the curve, not the last dollar.\n")
+    lines.append(
+        "> Note: this table uses the **conservative** 1536-dim assumption. This "
+        "project's default embeddings are local `all-MiniLM-L6-v2` at **384-dim** — "
+        "4x smaller vectors, so storage/RAM (and thus the ChromaDB VM cost) are "
+        "roughly **4x lower** than shown. The 1536-dim figures are the upper bound.\n"
+    )
 
     # Per-scale sizing detail
     lines.append("## Index sizing per scale\n")
