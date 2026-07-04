@@ -199,7 +199,15 @@ you change anything — delete them and add your own.
 
 ```bash
 python -m eval.run_eval --k 5
+
+# On a rate-limited free LLM tier, evaluate answers on an evenly-spread sample
+# (retrieval metrics still cover ALL questions):
+python -m eval.run_eval --k 5 --answer-sample 10
 ```
+
+> First verify your gold chunk ids resolve to the right chunks (essential — the
+> heavy ASCII/table/code content in these docs tokenizes unevenly, so estimated
+> indices are often wrong): `python -m eval.verify_gold` (add `--fix` to correct).
 
 This writes:
 - `results/eval_results.json` — config, **per-question** metrics, aggregates, warnings.
@@ -266,7 +274,8 @@ problem1-rag/
 │   └── logging_utils.py  # per-query JSONL logging
 ├── tests/                # hermetic pytest suite (26 tests, no key needed)
 ├── eval/
-│   ├── questions.json    # your 15-30 Q&A + gold chunks (template + examples)
+│   ├── questions.json    # 35 verified Q&A + gold chunks (source, chunk_index)
+│   ├── verify_gold.py    # locates each gold chunk by phrase; --fix corrects indices
 │   ├── retrieval_metrics.py  # Recall@k, Hit Rate, MRR, nDCG, context precision
 │   ├── answer_metrics.py     # LLM-as-judge + EM/F1
 │   └── run_eval.py           # runs everything -> results/*
@@ -326,22 +335,34 @@ Read it off your own `results/eval_summary.md`:
   grounding prompt, a smaller/tighter context window, lower temperature, or a
   stronger model.
 
-**On this corpus (4 project READMEs, 63 chunks, 8 starter questions, k=5), retrieval
-is the weaker link.** The committed run in [`results/eval_summary.md`](results/eval_summary.md)
-shows Recall@5 = **0.875** and MRR@5 = **0.60** — i.e. one question's gold chunk
-never made the top-5, and even when the gold chunk is retrieved it isn't always
-ranked first. Meanwhile the LLM-judge scores generation at **5.0/5.0 faithfulness
-and relevance**: whenever the right context *is* retrieved, the Groq answer is
-fully grounded and on-topic. So the investment that would move the needle here is
-upstream — better embeddings (e.g. `all-mpnet-base-v2`), higher `k`, smaller/tuned
-chunks, or hybrid + reranking — not the generator.
+**On this corpus (4 project READMEs, 63 chunks, 35 verified questions, k=5),
+retrieval is the weak link — decisively.** The committed run in
+[`results/eval_summary.md`](results/eval_summary.md) shows:
 
-Two honest caveats: (1) this is an **8-question starter set** — expand to 15–30
-(see below) for a statistically meaningful read, and the numbers will shift.
-(2) EM = 0.0 with F1 = 0.34 is expected: the model paraphrases correct answers
-rather than matching the terse gold strings, which is why faithfulness (semantic)
-is the more informative answer metric here. Context Precision = 0.175 is also
-expected — each question has a single gold chunk out of `k=5` retrieved.
+| Layer | Metric | Value |
+| --- | --- | --- |
+| Retrieval (all 35 Q) | Recall@5 / Hit Rate | **0.71** |
+| | MRR@5 | **0.49** |
+| | nDCG@5 | 0.55 |
+| Answer (LLM-judge, 8-Q sample) | Faithfulness (1-5) | **4.1** |
+| | Answer relevance (1-5) | **4.5** |
+
+For ~10 of 35 questions the gold chunk never entered the top-5 (Recall 0.71), and
+MRR 0.49 means even when it *is* retrieved it's often not rank 1. But when the right
+context is retrieved, generation is strong (faithfulness 4.1/5, relevance 4.5/5).
+**So the bottleneck is retrieval, not generation** — the fix is upstream: a stronger
+embedding model (e.g. `all-mpnet-base-v2`, 768-dim), higher `k`, smaller/cleaner
+chunks (these README chunks are dense with ASCII diagrams and tables that embed
+poorly), or hybrid keyword+vector search with reranking.
+
+Notes on the numbers: (1) retrieval metrics cover **all 35** questions; the
+LLM-judge answer-eval ran on an **evenly-spread 8-question sample** to fit the Groq
+free-tier rate limit (`--answer-sample`; see below) and used `llama-3.1-8b-instant`
+— re-run with the 70B model for higher answer scores once daily quota resets.
+(2) EM = 0.0 with F1 = 0.36 is expected: the model paraphrases correct answers
+rather than matching the terse gold strings, so faithfulness (semantic) is the more
+informative answer metric. (3) Context Precision = 0.14 is expected — each question
+has a single gold chunk out of `k=5` retrieved.
 
 ---
 

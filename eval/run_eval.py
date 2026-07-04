@@ -80,7 +80,7 @@ def _resolve_gold(question: dict, gold_index: dict[tuple[str, int], str]) -> tup
     return gold, warnings
 
 
-def run(questions_path: str, k: int, threshold: float) -> dict:
+def run(questions_path: str, k: int, threshold: float, answer_sample: int = 0) -> dict:
     store = VectorStore()
     if store.count() == 0:
         raise RuntimeError(
@@ -96,6 +96,15 @@ def run(questions_path: str, k: int, threshold: float) -> dict:
 
     gold_index = _build_gold_index(store)
     llm_on = llm_available()
+
+    # Answer-eval sampling: retrieval metrics are computed for ALL questions, but
+    # the (rate-limited, paid) LLM answer-eval can be restricted to an evenly-spread
+    # sample of `answer_sample` questions. 0 = evaluate answers for every question.
+    if answer_sample and answer_sample < len(questions):
+        step = len(questions) / answer_sample
+        answer_ids = {questions[min(len(questions) - 1, int(i * step))]["id"] for i in range(answer_sample)}
+    else:
+        answer_ids = {q.get("id", q["question"][:40]) for q in questions}
 
     # Warm up the embedding model + index once (untimed). Local models
     # (sentence-transformers) pay a one-time load cost on first encode; excluding
@@ -141,7 +150,7 @@ def run(questions_path: str, k: int, threshold: float) -> dict:
         # Wrapped so a per-question LLM failure (e.g. Groq daily token cap) records
         # the error and continues — retrieval metrics + latency above are always
         # produced for every question regardless of LLM availability.
-        if llm_on:
+        if llm_on and qid in answer_ids:
             try:
                 result = generate_answer(q["question"], k=k, threshold=threshold, store=store)
                 entry["answer"] = result.answer
@@ -194,6 +203,8 @@ def run(questions_path: str, k: int, threshold: float) -> dict:
 
     answer_summary = {"llm_judge_enabled": llm_on}
     if llm_on:
+        answer_summary["answer_eval_questions"] = len(answer_ids)
+        answer_summary["answer_eval_sampled"] = len(answer_ids) < len(questions)
         answer_summary["mean_faithfulness_1to5"] = (
             round(sum(faithfulness_scores) / len(faithfulness_scores), 3)
             if faithfulness_scores else None
@@ -269,7 +280,14 @@ def _write_summary_md(report: dict, path: str) -> None:
         if "exact_match" in ans:
             lines.append(f"| Exact Match | {ans['exact_match']} |")
             lines.append(f"| Token F1 | {ans['token_f1']} |")
-        lines.append(f"\n_Judged {ans.get('judged_questions', 0)} question(s)._\n")
+        note = f"Judged {ans.get('judged_questions', 0)} question(s)"
+        if ans.get("answer_eval_sampled"):
+            note += (
+                f" — an evenly-spread sample of {ans.get('answer_eval_questions')} "
+                "(retrieval metrics above cover ALL questions; answer-eval was "
+                "sampled to fit the LLM rate limit)"
+            )
+        lines.append(f"\n_{note}._\n")
 
     lines.append("## Retrieval latency\n")
     lines.append("| Metric | ms |")
@@ -295,9 +313,15 @@ def main() -> None:
     parser.add_argument("--questions", default=os.path.join(_ROOT, "eval", "questions.json"))
     parser.add_argument("--k", type=int, default=settings.top_k)
     parser.add_argument("--threshold", type=float, default=settings.similarity_threshold)
+    parser.add_argument(
+        "--answer-sample", type=int, default=0,
+        help="Evaluate answer quality on an evenly-spread sample of N questions "
+             "(retrieval metrics still cover all questions). 0 = all. Useful under "
+             "LLM rate limits.",
+    )
     args = parser.parse_args()
 
-    report = run(args.questions, k=args.k, threshold=args.threshold)
+    report = run(args.questions, k=args.k, threshold=args.threshold, answer_sample=args.answer_sample)
 
     os.makedirs(RESULTS_DIR, exist_ok=True)
     json_path = os.path.join(RESULTS_DIR, "eval_results.json")

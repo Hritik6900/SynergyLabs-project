@@ -8,32 +8,35 @@
       "dimensionality": 384
     },
     "llm_provider": "groq",
-    "llm_model": "llama-3.3-70b-versatile",
-    "num_questions": 8,
+    "llm_model": "llama-3.1-8b-instant",
+    "num_questions": 35,
     "num_chunks_in_store": 63
   },
   "retrieval_metrics": {
-    "recall@k": 0.875,
-    "hit_rate@k": 0.875,
-    "mrr@k": 0.6042,
-    "ndcg@k": 0.6741,
-    "context_precision@k": 0.175
+    "recall@k": 0.7143,
+    "hit_rate@k": 0.7143,
+    "mrr@k": 0.4933,
+    "ndcg@k": 0.5488,
+    "context_precision@k": 0.1429
   },
   "answer_metrics": {
     "llm_judge_enabled": true,
-    "mean_faithfulness_1to5": 5.0,
-    "mean_answer_relevance_1to5": 5.0,
+    "answer_eval_questions": 8,
+    "answer_eval_sampled": true,
+    "mean_faithfulness_1to5": 4.125,
+    "mean_answer_relevance_1to5": 4.5,
     "judged_questions": 8,
+    "answer_eval_failures": 0,
     "exact_match": 0.0,
-    "token_f1": 0.34,
+    "token_f1": 0.356,
     "gold_answer_questions": 8
   },
   "latency": {
-    "count": 8,
-    "p50_ms": 21.3,
-    "p95_ms": 28.16,
-    "mean_ms": 22.49,
-    "max_ms": 28.34
+    "count": 35,
+    "p50_ms": 21.2,
+    "p95_ms": 26.96,
+    "mean_ms": 20.53,
+    "max_ms": 27.63
   },
   "warnings": [],
   "per_question": [
@@ -50,7 +53,7 @@
         "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526",
         "25a02482ea13541ed3922ddec8df0d09795b7c713cd38fd0c3f1e7f2457ad1f7"
       ],
-      "retrieval_latency_ms": 19.33,
+      "retrieval_latency_ms": 15.65,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
@@ -58,7 +61,7 @@
         "ndcg@k": 0.6309297535714575,
         "context_precision@k": 0.2
       },
-      "answer": "DualCast is a privacy-preserving, real-time AI commentary generation system designed for live eSports broadcasts [source #0]. It solves the problem of providing real-time autonomous commentary for eSports, eliminating the need for live human casters or expensive post-production commentary overlays [source #0].",
+      "answer": "DualCast is a real-time AI commentary generation system designed for live eSports broadcasts. It transforms raw gameplay footage into broadcast-grade commentary with synchronized audio, enabling autonomous virtual casting capabilities. [DualCast.md #0]\n\nIt solves the problem of generating high-quality, real-time commentary for live eSports broadcasts, allowing for autonomous virtual casting capabilities. [DualCast.md #0]",
       "cited_chunk_ids": [
         "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559",
         "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
@@ -66,19 +69,19 @@
         "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526"
       ],
       "token_usage": {
-        "prompt_tokens": 1723,
-        "completion_tokens": 57,
-        "total_tokens": 1780
+        "prompt_tokens": 1089,
+        "completion_tokens": 74,
+        "total_tokens": 1163
       },
       "no_relevant_context": false,
       "judge": {
         "faithfulness": 5,
-        "faithfulness_rationale": "The answer directly quotes and paraphrases information from the context chunks, accurately representing the DualCast system and its purpose.",
+        "faithfulness_rationale": "Every claim is directly supported by the context.",
         "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer fully and directly addresses the question, providing a clear description of DualCast and the problem it solves."
+        "answer_relevance_rationale": "The answer fully and directly answers the question."
       },
       "em": 0.0,
-      "f1": 0.4167
+      "f1": 0.3
     },
     {
       "id": "dualcast-temperature",
@@ -93,36 +96,212 @@
         "39eb4dd5c8161939a30aed2cc4eeca82e196afc859abbfcfaf016165629c67bf",
         "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559"
       ],
-      "retrieval_latency_ms": 20.35,
+      "retrieval_latency_ms": 18.28,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 0.5,
         "ndcg@k": 0.6309297535714575,
         "context_precision@k": 0.2
-      },
-      "answer": "DualCast uses a temperature of 0.8 for controlled randomness in commentary generation [DualCast.md #6]. This avoids hallucination and allows for variety in the generated commentary.",
-      "cited_chunk_ids": [
+      }
+    },
+    {
+      "id": "dualcast-vlm-frame-sampling",
+      "question": "How many keyframes does DualCast's VLM sample per inference, and at what resolution?",
+      "gold_chunk_ids": [
+        "02a3a1956b61f414fd3993866b374bf776bba25cc983634a6be2b135668608aa"
+      ],
+      "retrieved_chunk_ids": [
         "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
-        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02",
         "6ebb9828b6ff218abe49897933694d81bff973a55d277f0269ad14a6150fff50",
-        "39eb4dd5c8161939a30aed2cc4eeca82e196afc859abbfcfaf016165629c67bf",
+        "d895a3eb442d77185f17d75725b3dab9e03896e4ce7b09067cb033beef38b5ce",
+        "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526",
+        "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559"
+      ],
+      "retrieval_latency_ms": 17.16,
+      "retrieval_metrics": {
+        "recall@k": 0.0,
+        "hit_rate@k": 0.0,
+        "mrr@k": 0.0,
+        "ndcg@k": 0.0,
+        "context_precision@k": 0.0
+      }
+    },
+    {
+      "id": "dualcast-tts-cost",
+      "question": "Which TTS provider does DualCast use and what does it cost?",
+      "gold_chunk_ids": [
+        "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526"
+      ],
+      "retrieved_chunk_ids": [
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526",
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02",
+        "2ad171d2653c41d46158b625b53b7607fa9f1db9f11288d96ce91998b2f9ea29",
+        "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559"
+      ],
+      "retrieval_latency_ms": 15.66,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.5,
+        "ndcg@k": 0.6309297535714575,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "dualcast-av-sync-fix",
+      "question": "How did DualCast solve audio-video synchronization issues?",
+      "gold_chunk_ids": [
+        "d86f945de3dbe590cfc2e304f8eb89d69a2b667d62f1930464f0c803066b1abe"
+      ],
+      "retrieved_chunk_ids": [
+        "d86f945de3dbe590cfc2e304f8eb89d69a2b667d62f1930464f0c803066b1abe",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "24c861566d8606dd73c87d46967ff0319d3bbbd1fc75b6744488ca131160b186",
+        "2ad171d2653c41d46158b625b53b7607fa9f1db9f11288d96ce91998b2f9ea29",
+        "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559"
+      ],
+      "retrieval_latency_ms": 16.54,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
+        "context_precision@k": 0.2
+      },
+      "answer": "DualCast solved audio-video synchronization issues by implementing a single FFmpeg mux pass combining video and audio into one WebM container, and setting the client-side Media Source Extensions (MSE) to `sequence` mode, which ignores timestamps and plays chunks in order [DualCast.md #7]. This ensures frame-perfect sync at muxing time, not client-side [DualCast.md #7].",
+      "cited_chunk_ids": [
+        "d86f945de3dbe590cfc2e304f8eb89d69a2b667d62f1930464f0c803066b1abe",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "24c861566d8606dd73c87d46967ff0319d3bbbd1fc75b6744488ca131160b186",
+        "2ad171d2653c41d46158b625b53b7607fa9f1db9f11288d96ce91998b2f9ea29",
         "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559"
       ],
       "token_usage": {
-        "prompt_tokens": 2233,
-        "completion_tokens": 38,
-        "total_tokens": 2271
+        "prompt_tokens": 1349,
+        "completion_tokens": 80,
+        "total_tokens": 1429
       },
       "no_relevant_context": false,
       "judge": {
         "faithfulness": 5,
-        "faithfulness_rationale": "The answer directly quotes a temperature value from the context chunks, supporting its claim about DualCast's commentary generation.",
+        "faithfulness_rationale": "The answer directly supports the context by referencing the specific solution implemented in DualCast.md #7.",
         "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer fully and directly addresses the question about the sampling temperature used by DualCast for commentary generation and provides a reason for this choice."
+        "answer_relevance_rationale": "The answer fully and directly answers the question about how DualCast solved audio-video synchronization issues."
       },
       "em": 0.0,
-      "f1": 0.4706
+      "f1": 0.6076
+    },
+    {
+      "id": "dualcast-broadcast-lock",
+      "question": "How does DualCast prevent one slow client from blocking broadcast to other clients?",
+      "gold_chunk_ids": [
+        "d86f945de3dbe590cfc2e304f8eb89d69a2b667d62f1930464f0c803066b1abe"
+      ],
+      "retrieved_chunk_ids": [
+        "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559",
+        "746b024e35daeed982b3c7d469023254e1b4237353e758b4d56a44716a905763",
+        "24c861566d8606dd73c87d46967ff0319d3bbbd1fc75b6744488ca131160b186",
+        "2ad171d2653c41d46158b625b53b7607fa9f1db9f11288d96ce91998b2f9ea29",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3"
+      ],
+      "retrieval_latency_ms": 23.99,
+      "retrieval_metrics": {
+        "recall@k": 0.0,
+        "hit_rate@k": 0.0,
+        "mrr@k": 0.0,
+        "ndcg@k": 0.0,
+        "context_precision@k": 0.0
+      }
+    },
+    {
+      "id": "dualcast-monotonic-clock",
+      "question": "Why did DualCast switch from time.time() to time.monotonic() for frame pacing?",
+      "gold_chunk_ids": [
+        "24c861566d8606dd73c87d46967ff0319d3bbbd1fc75b6744488ca131160b186"
+      ],
+      "retrieved_chunk_ids": [
+        "24c861566d8606dd73c87d46967ff0319d3bbbd1fc75b6744488ca131160b186",
+        "da9cf8652683027d70182e7aeb44c51374f223877e86f1e0f03bd3316d5099e1",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "d86f945de3dbe590cfc2e304f8eb89d69a2b667d62f1930464f0c803066b1abe",
+        "6ebb9828b6ff218abe49897933694d81bff973a55d277f0269ad14a6150fff50"
+      ],
+      "retrieval_latency_ms": 20.94,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "dualcast-rtsp-reconnect",
+      "question": "How does DualCast handle an RTSP stream disconnecting?",
+      "gold_chunk_ids": [
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02"
+      ],
+      "retrieved_chunk_ids": [
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "746b024e35daeed982b3c7d469023254e1b4237353e758b4d56a44716a905763",
+        "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559",
+        "2ad171d2653c41d46158b625b53b7607fa9f1db9f11288d96ce91998b2f9ea29"
+      ],
+      "retrieval_latency_ms": 15.56,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "dualcast-e2e-latency",
+      "question": "What is DualCast's typical end-to-end latency from frame capture to client broadcast?",
+      "gold_chunk_ids": [
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02"
+      ],
+      "retrieved_chunk_ids": [
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "24c861566d8606dd73c87d46967ff0319d3bbbd1fc75b6744488ca131160b186",
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02",
+        "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559",
+        "d86f945de3dbe590cfc2e304f8eb89d69a2b667d62f1930464f0c803066b1abe"
+      ],
+      "retrieval_latency_ms": 16.24,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.3333333333333333,
+        "ndcg@k": 0.5,
+        "context_precision@k": 0.2
+      },
+      "answer": "5-7 seconds from frame capture to WebM broadcast [source #2. **Low-Latency Inference Pipeline**]",
+      "cited_chunk_ids": [
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "24c861566d8606dd73c87d46967ff0319d3bbbd1fc75b6744488ca131160b186",
+        "fe4581c052567077b756389ffbd2afb3eece05a6c43f6524beecea3152abef02",
+        "738b90f482176af4f262dc6bc73362b1ccaa57938592fdd1bb564a34a0fed559",
+        "d86f945de3dbe590cfc2e304f8eb89d69a2b667d62f1930464f0c803066b1abe"
+      ],
+      "token_usage": {
+        "prompt_tokens": 1342,
+        "completion_tokens": 27,
+        "total_tokens": 1369
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer directly quotes the context, providing a specific time range for the end-to-end latency.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer fully and directly answers the question, providing the typical end-to-end latency from frame capture to client broadcast."
+      },
+      "em": 0.0,
+      "f1": 0.6087
     },
     {
       "id": "navdrishti-purpose",
@@ -137,32 +316,14 @@
         "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217",
         "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795"
       ],
-      "retrieval_latency_ms": 28.34,
+      "retrieval_latency_ms": 25.03,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 1.0,
         "ndcg@k": 1.0,
         "context_precision@k": 0.2
-      },
-      "answer": "The NavDrishti smart stick is an assistive technology platform designed to assist visually impaired individuals in navigation and obstacle detection [source #0]. It provides real-time object detection with audio alerts, enabling users to perceive their environment safely [source #0].",
-      "cited_chunk_ids": [
-        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25"
-      ],
-      "token_usage": {
-        "prompt_tokens": 644,
-        "completion_tokens": 52,
-        "total_tokens": 696
-      },
-      "no_relevant_context": false,
-      "judge": {
-        "faithfulness": 5,
-        "faithfulness_rationale": "The answer directly quotes and paraphrases information from the context chunks, accurately representing the purpose of the NavDrishti smart stick.",
-        "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer fully and directly addresses the question, clearly stating the purpose of the NavDrishti smart stick."
-      },
-      "em": 0.0,
-      "f1": 0.36
+      }
     },
     {
       "id": "navdrishti-cooldown",
@@ -177,7 +338,73 @@
         "6ebb9828b6ff218abe49897933694d81bff973a55d277f0269ad14a6150fff50",
         "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3"
       ],
-      "retrieval_latency_ms": 24.14,
+      "retrieval_latency_ms": 22.77,
+      "retrieval_metrics": {
+        "recall@k": 0.0,
+        "hit_rate@k": 0.0,
+        "mrr@k": 0.0,
+        "ndcg@k": 0.0,
+        "context_precision@k": 0.0
+      }
+    },
+    {
+      "id": "navdrishti-models-used",
+      "question": "What YOLO models does NavDrishti run for object and currency detection?",
+      "gold_chunk_ids": [
+        "ca68d45411a3bd64d6d6738300d95a0cfe7f63dd5fefcd206cc70f184ebff4aa"
+      ],
+      "retrieved_chunk_ids": [
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "ca68d45411a3bd64d6d6738300d95a0cfe7f63dd5fefcd206cc70f184ebff4aa",
+        "d05ff2483d466f8d399c0a304cce44bb6cf7f11f0513f0c299147ea2e5fe9556",
+        "a5cca769f1ffa5d94ee0fedc9d1aec15b38131cfd97513f19d43ccc02b041b9b",
+        "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526"
+      ],
+      "retrieval_latency_ms": 23.35,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.5,
+        "ndcg@k": 0.6309297535714575,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "navdrishti-risk-factors",
+      "question": "What factors does NavDrishti's risk scoring engine combine to prioritize warnings?",
+      "gold_chunk_ids": [
+        "ead93a497a98a499ac54b27c6c6c3b2ad3a470d2f55fdd5a1ed751219524306e"
+      ],
+      "retrieved_chunk_ids": [
+        "ead93a497a98a499ac54b27c6c6c3b2ad3a470d2f55fdd5a1ed751219524306e",
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "25a02482ea13541ed3922ddec8df0d09795b7c713cd38fd0c3f1e7f2457ad1f7",
+        "a15ceef6dd01dfa871cd538be897e4e1a9587d58f60166b335da8cea8d5547cf",
+        "190992e39388896e3607239a099154735dde62c9829cc07dd636cf31e84f39a2"
+      ],
+      "retrieval_latency_ms": 22.85,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "navdrishti-risk-threshold",
+      "question": "What is the default risk score threshold NavDrishti uses to trigger an audio warning?",
+      "gold_chunk_ids": [
+        "ac39c89438ea78572264b7a52862395767783ab083a26060df444d5f06a7fcfa"
+      ],
+      "retrieved_chunk_ids": [
+        "ead93a497a98a499ac54b27c6c6c3b2ad3a470d2f55fdd5a1ed751219524306e",
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "ae97d5fbb984389d8e025ef3587a3b1a309b4417c2770dd827820eed3b7b449c",
+        "bbb02c684428b019ed63ce7b1f8ff9538769219df4da008efa5e5b94846b2e8b",
+        "e47af4eec3a09092ef812705f0049235cf9d799df3770b41dfd3349107ededc8"
+      ],
+      "retrieval_latency_ms": 22.06,
       "retrieval_metrics": {
         "recall@k": 0.0,
         "hit_rate@k": 0.0,
@@ -185,26 +412,137 @@
         "ndcg@k": 0.0,
         "context_precision@k": 0.0
       },
-      "answer": "NavDrishti avoids repeating the same audio warning by applying cooldown timers, including per-detection class cooldown (20s) and global warning cooldown [NavDrishti-Server.md #5]. It also suppresses ambiguous detections with high-variance scores [NavDrishti-Server.md #5].",
+      "answer": "92.0 [source #8.chunk_index]",
       "cited_chunk_ids": [
-        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
         "ead93a497a98a499ac54b27c6c6c3b2ad3a470d2f55fdd5a1ed751219524306e",
-        "ae97d5fbb984389d8e025ef3587a3b1a309b4417c2770dd827820eed3b7b449c"
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "ae97d5fbb984389d8e025ef3587a3b1a309b4417c2770dd827820eed3b7b449c",
+        "bbb02c684428b019ed63ce7b1f8ff9538769219df4da008efa5e5b94846b2e8b"
       ],
       "token_usage": {
-        "prompt_tokens": 1654,
-        "completion_tokens": 63,
-        "total_tokens": 1717
+        "prompt_tokens": 1340,
+        "completion_tokens": 11,
+        "total_tokens": 1351
       },
       "no_relevant_context": false,
       "judge": {
         "faithfulness": 5,
-        "faithfulness_rationale": "The answer directly quotes and references specific context chunks from NavDrishti-Server.md #5, demonstrating that every claim is supported by the context.",
+        "faithfulness_rationale": "The answer directly quotes the risk score threshold from the provided context.",
         "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer fully and directly addresses the question of how NavDrishti avoids repeating the same audio warning, providing specific details from the context."
+        "answer_relevance_rationale": "The answer fully and directly answers the question about the default risk score threshold for triggering an audio warning."
       },
       "em": 0.0,
-      "f1": 0.1923
+      "f1": 0.25
+    },
+    {
+      "id": "navdrishti-onnx-speedup",
+      "question": "How much inference speedup does ONNX Runtime give NavDrishti over the alternative?",
+      "gold_chunk_ids": [
+        "a5cca769f1ffa5d94ee0fedc9d1aec15b38131cfd97513f19d43ccc02b041b9b"
+      ],
+      "retrieved_chunk_ids": [
+        "a5cca769f1ffa5d94ee0fedc9d1aec15b38131cfd97513f19d43ccc02b041b9b",
+        "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526",
+        "9a6de74785ac4e7c1d8aed70c0a652c187290e07f5ba02678ac0dde5db6ebc43",
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "211672453a71cf13ebc42bb07689d603fa1756d444f27333bf33ea3b51972a8c"
+      ],
+      "retrieval_latency_ms": 27.63,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "navdrishti-persistence-check",
+      "question": "What persistence requirement must a detection meet before NavDrishti issues a warning?",
+      "gold_chunk_ids": [
+        "a5cca769f1ffa5d94ee0fedc9d1aec15b38131cfd97513f19d43ccc02b041b9b"
+      ],
+      "retrieved_chunk_ids": [
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "25a02482ea13541ed3922ddec8df0d09795b7c713cd38fd0c3f1e7f2457ad1f7",
+        "ead93a497a98a499ac54b27c6c6c3b2ad3a470d2f55fdd5a1ed751219524306e",
+        "bbb02c684428b019ed63ce7b1f8ff9538769219df4da008efa5e5b94846b2e8b",
+        "a5cca769f1ffa5d94ee0fedc9d1aec15b38131cfd97513f19d43ccc02b041b9b"
+      ],
+      "retrieval_latency_ms": 23.37,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.2,
+        "ndcg@k": 0.38685280723454163,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "navdrishti-edge-hardware",
+      "question": "What minimum hardware does NavDrishti require for edge deployment?",
+      "gold_chunk_ids": [
+        "a5cca769f1ffa5d94ee0fedc9d1aec15b38131cfd97513f19d43ccc02b041b9b"
+      ],
+      "retrieved_chunk_ids": [
+        "8138cbd7b6733e999eed465b7826e0dfa61310af1e3febf3a290c501f4116c0c",
+        "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526",
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "25a02482ea13541ed3922ddec8df0d09795b7c713cd38fd0c3f1e7f2457ad1f7",
+        "211672453a71cf13ebc42bb07689d603fa1756d444f27333bf33ea3b51972a8c"
+      ],
+      "retrieval_latency_ms": 21.2,
+      "retrieval_metrics": {
+        "recall@k": 0.0,
+        "hit_rate@k": 0.0,
+        "mrr@k": 0.0,
+        "ndcg@k": 0.0,
+        "context_precision@k": 0.0
+      }
+    },
+    {
+      "id": "navdrishti-tts-phase",
+      "question": "In which development phase did NavDrishti introduce the separate TTS/audio warning subsystem?",
+      "gold_chunk_ids": [
+        "cd2635c0a6b7b953688118be56d5979205f494fb00c5802d67f82471f2943146"
+      ],
+      "retrieved_chunk_ids": [
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "bbb02c684428b019ed63ce7b1f8ff9538769219df4da008efa5e5b94846b2e8b",
+        "ead93a497a98a499ac54b27c6c6c3b2ad3a470d2f55fdd5a1ed751219524306e",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "ae97d5fbb984389d8e025ef3587a3b1a309b4417c2770dd827820eed3b7b449c"
+      ],
+      "retrieval_latency_ms": 22.89,
+      "retrieval_metrics": {
+        "recall@k": 0.0,
+        "hit_rate@k": 0.0,
+        "mrr@k": 0.0,
+        "ndcg@k": 0.0,
+        "context_precision@k": 0.0
+      },
+      "answer": "I don't have enough information to determine the development phase when NavDrishti introduced the separate TTS/audio warning subsystem.",
+      "cited_chunk_ids": [
+        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
+        "bbb02c684428b019ed63ce7b1f8ff9538769219df4da008efa5e5b94846b2e8b",
+        "ead93a497a98a499ac54b27c6c6c3b2ad3a470d2f55fdd5a1ed751219524306e",
+        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3",
+        "ae97d5fbb984389d8e025ef3587a3b1a309b4417c2770dd827820eed3b7b449c"
+      ],
+      "token_usage": {
+        "prompt_tokens": 1601,
+        "completion_tokens": 26,
+        "total_tokens": 1627
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 1,
+        "faithfulness_rationale": "The system's answer contradicts the context by stating it doesn't have enough information.",
+        "answer_relevance": 1,
+        "answer_relevance_rationale": "The system's answer is off-topic and non-responsive to the question about the development phase."
+      },
+      "em": 0.0,
+      "f1": 0.1765
     },
     {
       "id": "terravision-model",
@@ -219,36 +557,14 @@
         "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526",
         "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3"
       ],
-      "retrieval_latency_ms": 17.61,
+      "retrieval_latency_ms": 26.74,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 1.0,
         "ndcg@k": 1.0,
         "context_precision@k": 0.2
-      },
-      "answer": "TerraVision uses the **Google Gemini AI** model, specifically the `gemini-2.5-flash` model, for text analysis, image generation, and vision API capabilities, including green corridor planning, urban metrics analysis, and street photo transformation [source #0].",
-      "cited_chunk_ids": [
-        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
-        "eb3aef8fac70bf4fd4ecf14886f7949d1c2aa5c977c5aaefe8153e2f6b11ad25",
-        "a5cca769f1ffa5d94ee0fedc9d1aec15b38131cfd97513f19d43ccc02b041b9b",
-        "a434faf95d77936af32ea2017e4ee4bd8208a65e1cc96ec2b5290cbe8010a526",
-        "fae4146fd81a1ce32089966f479c41a2301313e9b108a06e68369822395386b3"
-      ],
-      "token_usage": {
-        "prompt_tokens": 2674,
-        "completion_tokens": 56,
-        "total_tokens": 2730
-      },
-      "no_relevant_context": false,
-      "judge": {
-        "faithfulness": 5,
-        "faithfulness_rationale": "The answer directly quotes and references the context chunk that mentions the Google Gemini AI model used by TerraVision.",
-        "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer fully and directly addresses the question by specifying the AI model used by TerraVision and its purposes."
-      },
-      "em": 0.0,
-      "f1": 0.2439
+      }
     },
     {
       "id": "terravision-image-steps",
@@ -263,35 +579,168 @@
         "f67c3c0b49d3416e3816cf5600dbaf69b11cad4704c6cc9f389407f8fe7c27a9",
         "7ed35b882587ff5f057eef9e99efc744c334f6aea7a1ef67dfad860960b77d47"
       ],
-      "retrieval_latency_ms": 27.81,
+      "retrieval_latency_ms": 24.11,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 0.5,
         "ndcg@k": 0.6309297535714575,
         "context_precision@k": 0.2
-      },
-      "answer": "TerraVision generates a transformed image using Gemini by following these steps: \n1. Converting the image to Base64, \n2. Sending it to Gemini with a transformation prompt, \n3. Requesting `responseModalities: [\"TEXT\", \"IMAGE\"]`, \n4. Extracting the generated image and text analysis, and \n5. Fallback to multiple models if needed [source #4].",
-      "cited_chunk_ids": [
+      }
+    },
+    {
+      "id": "terravision-image-fallback-chain",
+      "question": "What is TerraVision's fallback chain of image generation models, and why does it use multiple models?",
+      "gold_chunk_ids": [
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795"
+      ],
+      "retrieved_chunk_ids": [
         "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
-        "d28bb7086903e5ce3ebe592181223fcfef1228d2fc74bc4a0aa3f8d10a0b65e0",
-        "baabc66be07fc3663b42c6c8baf58033d5143b2ad650aa16b10daf3c358b0597",
+        "cd2635c0a6b7b953688118be56d5979205f494fb00c5802d67f82471f2943146",
+        "d895a3eb442d77185f17d75725b3dab9e03896e4ce7b09067cb033beef38b5ce",
+        "a5cca769f1ffa5d94ee0fedc9d1aec15b38131cfd97513f19d43ccc02b041b9b",
+        "d28bb7086903e5ce3ebe592181223fcfef1228d2fc74bc4a0aa3f8d10a0b65e0"
+      ],
+      "retrieval_latency_ms": 24.58,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "terravision-score-formula",
+      "question": "How does TerraVision calculate a region's green score and heat score?",
+      "gold_chunk_ids": [
+        "991db4503f61d0484c58303193bca00aa83a6691c13e754f03075fe921a96180"
+      ],
+      "retrieved_chunk_ids": [
+        "991db4503f61d0484c58303193bca00aa83a6691c13e754f03075fe921a96180",
+        "7304909a1dc68ddaf5f9091401f5d73b411f52968b1399749e68a32b45eb4bf3",
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
+        "df5a85aef774e031d0f26d07697975ae27d5c3989faae20f95ff2e58d76ac993",
+        "f67c3c0b49d3416e3816cf5600dbaf69b11cad4704c6cc9f389407f8fe7c27a9"
+      ],
+      "retrieval_latency_ms": 22.64,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
+        "context_precision@k": 0.2
+      },
+      "answer": "TerraVision calculates a region's green score and heat score using the following formulas:\n\n- Green score: `greenScore = clamp(12 + greenness × 1.2, 12, 98)`\n- Heat score: `heatScore = clamp(90 - greenCoverPct × 0.75 - solar × 1.1 + pressure × 0.25, 24, 96)`\n\nWhere:\n- `greenness` is calculated as `greenCoverPct × 0.7 + solar × 2.5 + ev`\n- `pressure` is calculated as `max(0, 40 - (greenCoverPct × 0.5 + solar))`\n- `greenCoverPct` is not defined in the provided context, so it's not possible to calculate the exact values of `greenScore` and `heatScore` without additional information.\n\n[terra_vision.md #3]",
+      "cited_chunk_ids": [
+        "991db4503f61d0484c58303193bca00aa83a6691c13e754f03075fe921a96180",
+        "7304909a1dc68ddaf5f9091401f5d73b411f52968b1399749e68a32b45eb4bf3",
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
+        "df5a85aef774e031d0f26d07697975ae27d5c3989faae20f95ff2e58d76ac993",
         "f67c3c0b49d3416e3816cf5600dbaf69b11cad4704c6cc9f389407f8fe7c27a9"
       ],
       "token_usage": {
-        "prompt_tokens": 2075,
-        "completion_tokens": 83,
-        "total_tokens": 2158
+        "prompt_tokens": 1725,
+        "completion_tokens": 193,
+        "total_tokens": 1918
       },
       "no_relevant_context": false,
       "judge": {
-        "faithfulness": 5,
-        "faithfulness_rationale": "The answer is directly supported by the context, specifically in the section describing how TerraVision generates a transformed image using Gemini.",
+        "faithfulness": 2,
+        "faithfulness_rationale": "The system's answer partially supports the context, but it lacks information about the variable 'greenCoverPct' which is necessary to calculate the exact values of 'greenScore' and 'heatScore'.",
         "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer fully and directly addresses the question of how TerraVision generates a transformed image using Gemini."
+        "answer_relevance_rationale": "The system's answer directly answers the question about how TerraVision calculates a region's green score and heat score."
       },
       "em": 0.0,
-      "f1": 0.5
+      "f1": 0.25
+    },
+    {
+      "id": "terravision-city-corridors",
+      "question": "How many predefined city-wide green corridor types does TerraVision generate, and using what layout?",
+      "gold_chunk_ids": [
+        "991db4503f61d0484c58303193bca00aa83a6691c13e754f03075fe921a96180"
+      ],
+      "retrieved_chunk_ids": [
+        "991db4503f61d0484c58303193bca00aa83a6691c13e754f03075fe921a96180",
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
+        "7481d88a0f33384369881682b27c175002ff620aba2d6662d9aeda76732edc78",
+        "7ed35b882587ff5f057eef9e99efc744c334f6aea7a1ef67dfad860960b77d47",
+        "7304909a1dc68ddaf5f9091401f5d73b411f52968b1399749e68a32b45eb4bf3"
+      ],
+      "retrieval_latency_ms": 25.14,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "terravision-json-fallback",
+      "question": "What does TerraVision do if the Gemini response can't be parsed as JSON?",
+      "gold_chunk_ids": [
+        "40f03837892f2fbf2d6d1d215fac5265a7cf779d5e4014331dcd6d1dab1f401d"
+      ],
+      "retrieved_chunk_ids": [
+        "f67c3c0b49d3416e3816cf5600dbaf69b11cad4704c6cc9f389407f8fe7c27a9",
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
+        "baabc66be07fc3663b42c6c8baf58033d5143b2ad650aa16b10daf3c358b0597",
+        "d28bb7086903e5ce3ebe592181223fcfef1228d2fc74bc4a0aa3f8d10a0b65e0",
+        "7ed35b882587ff5f057eef9e99efc744c334f6aea7a1ef67dfad860960b77d47"
+      ],
+      "retrieval_latency_ms": 18.95,
+      "retrieval_metrics": {
+        "recall@k": 0.0,
+        "hit_rate@k": 0.0,
+        "mrr@k": 0.0,
+        "ndcg@k": 0.0,
+        "context_precision@k": 0.0
+      }
+    },
+    {
+      "id": "terravision-env-var",
+      "question": "What is the required environment variable for TerraVision's Gemini API key?",
+      "gold_chunk_ids": [
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795"
+      ],
+      "retrieved_chunk_ids": [
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
+        "82b9f20ef75fe24a3e2d845057bee2fc8bbb978c0dfd6623fcccdf7d1b21d5e1",
+        "baabc66be07fc3663b42c6c8baf58033d5143b2ad650aa16b10daf3c358b0597",
+        "365e2f974941c20e707f390fcf7cea2b56357cf6f81ba3513b09df61c2e28cec",
+        "f67c3c0b49d3416e3816cf5600dbaf69b11cad4704c6cc9f389407f8fe7c27a9"
+      ],
+      "retrieval_latency_ms": 17.09,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 1.0,
+        "ndcg@k": 1.0,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "terravision-corridor-postprocess",
+      "question": "What post-processing steps does TerraVision apply to a Gemini-suggested corridor path?",
+      "gold_chunk_ids": [
+        "7481d88a0f33384369881682b27c175002ff620aba2d6662d9aeda76732edc78"
+      ],
+      "retrieved_chunk_ids": [
+        "7ed35b882587ff5f057eef9e99efc744c334f6aea7a1ef67dfad860960b77d47",
+        "a2a6642d0fdd258ee249396b0338ba633935813063546087c0f0e36b7951d795",
+        "991db4503f61d0484c58303193bca00aa83a6691c13e754f03075fe921a96180",
+        "baabc66be07fc3663b42c6c8baf58033d5143b2ad650aa16b10daf3c358b0597",
+        "7481d88a0f33384369881682b27c175002ff620aba2d6662d9aeda76732edc78"
+      ],
+      "retrieval_latency_ms": 16.59,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.2,
+        "ndcg@k": 0.38685280723454163,
+        "context_precision@k": 0.2
+      }
     },
     {
       "id": "voterakshak-type",
@@ -306,7 +755,7 @@
         "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c",
         "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217"
       ],
-      "retrieval_latency_ms": 22.24,
+      "retrieval_latency_ms": 15.63,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
@@ -314,7 +763,7 @@
         "ndcg@k": 1.0,
         "context_precision@k": 0.2
       },
-      "answer": "Vote Rakshak is a Decentralized Voting System with Facial Authentication [source #0].",
+      "answer": "Decentralized Voting System with Facial Authentication [voteRakshak.md #0]",
       "cited_chunk_ids": [
         "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
         "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
@@ -323,19 +772,19 @@
         "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217"
       ],
       "token_usage": {
-        "prompt_tokens": 2556,
-        "completion_tokens": 20,
-        "total_tokens": 2576
+        "prompt_tokens": 1508,
+        "completion_tokens": 19,
+        "total_tokens": 1527
       },
       "no_relevant_context": false,
       "judge": {
         "faithfulness": 5,
-        "faithfulness_rationale": "The answer directly quotes the context chunk that describes Vote Rakshak as a Decentralized Voting System with Facial Authentication.",
+        "faithfulness_rationale": "The system answer directly quotes the context chunk #0, which accurately describes Vote Rakshak.",
         "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer directly addresses the question about the type of system Vote Rakshak is."
+        "answer_relevance_rationale": "The system answer fully and directly answers the question, providing the type of system Vote Rakshak is."
       },
       "em": 0.0,
-      "f1": 0.4
+      "f1": 0.5
     },
     {
       "id": "voterakshak-vote-endpoint",
@@ -350,36 +799,190 @@
         "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c",
         "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217"
       ],
-      "retrieval_latency_ms": 20.1,
+      "retrieval_latency_ms": 27.49,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 0.3333333333333333,
         "ndcg@k": 0.5,
         "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "voterakshak-duplicate-face",
+      "question": "How does Vote Rakshak's smart contract prevent the same face from registering twice?",
+      "gold_chunk_ids": [
+        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c"
+      ],
+      "retrieved_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c",
+        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217",
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
+        "424de1a5da810c0c3573015cabe95f73cc1474f1afdce137b27aa934f6fb02fd"
+      ],
+      "retrieval_latency_ms": 21.75,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.5,
+        "ndcg@k": 0.6309297535714575,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "voterakshak-double-vote",
+      "question": "How does Vote Rakshak's smart contract prevent double voting?",
+      "gold_chunk_ids": [
+        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c"
+      ],
+      "retrieved_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c",
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
+        "424de1a5da810c0c3573015cabe95f73cc1474f1afdce137b27aa934f6fb02fd",
+        "009d3f5115868520833c760b55cd4721989493fbe4d553fac22825423b66afe3"
+      ],
+      "retrieval_latency_ms": 16.71,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.5,
+        "ndcg@k": 0.6309297535714575,
+        "context_precision@k": 0.2
+      }
+    },
+    {
+      "id": "voterakshak-admin-face-login",
+      "question": "Which endpoint handles the face-verification step of Vote Rakshak's admin login?",
+      "gold_chunk_ids": [
+        "009d3f5115868520833c760b55cd4721989493fbe4d553fac22825423b66afe3"
+      ],
+      "retrieved_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
+        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217",
+        "8d57a8961620089ea727a5d443f86c6cf38cd941bc04add7840d4726fdbbaa8d",
+        "009d3f5115868520833c760b55cd4721989493fbe4d553fac22825423b66afe3"
+      ],
+      "retrieval_latency_ms": 17.96,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.2,
+        "ndcg@k": 0.38685280723454163,
+        "context_precision@k": 0.2
       },
-      "answer": "The API endpoint used to cast a vote in Vote Rakshak is `/vote` [source #4].",
+      "answer": "/admin/login_face [voteRakshak.md #7]",
       "cited_chunk_ids": [
         "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
         "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
-        "009d3f5115868520833c760b55cd4721989493fbe4d553fac22825423b66afe3",
-        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c",
-        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217"
+        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217",
+        "8d57a8961620089ea727a5d443f86c6cf38cd941bc04add7840d4726fdbbaa8d",
+        "009d3f5115868520833c760b55cd4721989493fbe4d553fac22825423b66afe3"
       ],
       "token_usage": {
-        "prompt_tokens": 2566,
-        "completion_tokens": 23,
-        "total_tokens": 2589
+        "prompt_tokens": 1613,
+        "completion_tokens": 14,
+        "total_tokens": 1627
       },
       "no_relevant_context": false,
       "judge": {
         "faithfulness": 5,
-        "faithfulness_rationale": "The answer directly quotes a context chunk that explicitly states the API endpoint for casting a vote.",
+        "faithfulness_rationale": "The answer directly references the context chunk #7, which describes the face verification process in the admin login flow.",
         "answer_relevance": 5,
-        "answer_relevance_rationale": "The answer fully and directly responds to the question by providing the specific API endpoint used for casting a vote in Vote Rakshak."
+        "answer_relevance_rationale": "The answer directly answers the question, specifying the endpoint that handles the face-verification step of Vote Rakshak's admin login."
       },
       "em": 0.0,
-      "f1": 0.1333
+      "f1": 0.1538
+    },
+    {
+      "id": "voterakshak-face-capture-frames",
+      "question": "How many stable frames does Vote Rakshak's FaceMesh require before auto-capturing a voter's face?",
+      "gold_chunk_ids": [
+        "009d3f5115868520833c760b55cd4721989493fbe4d553fac22825423b66afe3"
+      ],
+      "retrieved_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
+        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217",
+        "8d57a8961620089ea727a5d443f86c6cf38cd941bc04add7840d4726fdbbaa8d",
+        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c"
+      ],
+      "retrieval_latency_ms": 24.35,
+      "retrieval_metrics": {
+        "recall@k": 0.0,
+        "hit_rate@k": 0.0,
+        "mrr@k": 0.0,
+        "ndcg@k": 0.0,
+        "context_precision@k": 0.0
+      }
+    },
+    {
+      "id": "voterakshak-gas-cost",
+      "question": "What is the approximate gas cost of a vote transaction in Vote Rakshak?",
+      "gold_chunk_ids": [
+        "f96208134a56ef4a9996b7a83d9543995f118e5d9b8f3080fcc4d7db09f2f917"
+      ],
+      "retrieved_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
+        "424de1a5da810c0c3573015cabe95f73cc1474f1afdce137b27aa934f6fb02fd",
+        "b44e22c7938589234ad05aece3bcf515869ddf359a77fc855524ecca36a1f3b0",
+        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c"
+      ],
+      "retrieval_latency_ms": 16.03,
+      "retrieval_metrics": {
+        "recall@k": 0.0,
+        "hit_rate@k": 0.0,
+        "mrr@k": 0.0,
+        "ndcg@k": 0.0,
+        "context_precision@k": 0.0
+      }
+    },
+    {
+      "id": "voterakshak-database-name",
+      "question": "What is the name of Vote Rakshak's MySQL database, and what does it store?",
+      "gold_chunk_ids": [
+        "15b907d95ffa3c79ae14d8d7ef827ab960f350bd5576afb1cbf2358ad6f9a54e"
+      ],
+      "retrieved_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
+        "424de1a5da810c0c3573015cabe95f73cc1474f1afdce137b27aa934f6fb02fd",
+        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217",
+        "f96208134a56ef4a9996b7a83d9543995f118e5d9b8f3080fcc4d7db09f2f917"
+      ],
+      "retrieval_latency_ms": 16.3,
+      "retrieval_metrics": {
+        "recall@k": 0.0,
+        "hit_rate@k": 0.0,
+        "mrr@k": 0.0,
+        "ndcg@k": 0.0,
+        "context_precision@k": 0.0
+      }
+    },
+    {
+      "id": "voterakshak-team",
+      "question": "What is the team name behind Vote Rakshak?",
+      "gold_chunk_ids": [
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661"
+      ],
+      "retrieved_chunk_ids": [
+        "b3203a53cf5dbcd826c1dbaca404fbf17e1a00d4e3fe6292e2d1e0ccdce2d4a1",
+        "810bb7057933cf3af81abf0c5c4470b267936fd0e1e36fb67c73f134c2b36661",
+        "ffc6feae99088350a9fe590f1b722ed434de7c1531cdd91227e681d34439931c",
+        "424de1a5da810c0c3573015cabe95f73cc1474f1afdce137b27aa934f6fb02fd",
+        "d95743e747ac273ecf37742fc232e71405df3188ff5673aff1aa1664391af217"
+      ],
+      "retrieval_latency_ms": 15.14,
+      "retrieval_metrics": {
+        "recall@k": 1.0,
+        "hit_rate@k": 1.0,
+        "mrr@k": 0.5,
+        "ndcg@k": 0.6309297535714575,
+        "context_precision@k": 0.2
+      }
     }
   ]
 }

@@ -57,7 +57,9 @@ def _openai_compatible(base_url: str | None, api_key: str | None, provider: str)
             f"LLM_PROVIDER={provider} but its API key is not set "
             f"({'GROQ_API_KEY' if provider == 'groq' else 'OPENAI_API_KEY'})."
         )
-    return OpenAI(api_key=api_key, base_url=base_url)
+    # timeout stops a single call from hanging indefinitely; max_retries=0 because
+    # retry/backoff is handled by _with_retries (so daily-cap 429s fail fast).
+    return OpenAI(api_key=api_key, base_url=base_url, timeout=30.0, max_retries=0)
 
 
 def chat_complete(
