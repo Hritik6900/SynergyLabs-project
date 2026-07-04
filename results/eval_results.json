@@ -20,14 +20,20 @@
     "context_precision@k": 0.3333
   },
   "answer_metrics": {
-    "llm_judge_enabled": false
+    "llm_judge_enabled": true,
+    "mean_faithfulness_1to5": 5.0,
+    "mean_answer_relevance_1to5": 5.0,
+    "judged_questions": 5,
+    "exact_match": 0.0,
+    "token_f1": 0.543,
+    "gold_answer_questions": 5
   },
   "latency": {
     "count": 5,
-    "p50_ms": 23.01,
-    "p95_ms": 35.04,
-    "mean_ms": 26.12,
-    "max_ms": 35.65
+    "p50_ms": 22.62,
+    "p95_ms": 26.81,
+    "mean_ms": 22.36,
+    "max_ms": 27.41
   },
   "warnings": [],
   "per_question": [
@@ -42,14 +48,32 @@
         "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
         "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875"
       ],
-      "retrieval_latency_ms": 20.77,
+      "retrieval_latency_ms": 17.07,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 1.0,
         "ndcg@k": 1.0,
         "context_precision@k": 0.3333333333333333
-      }
+      },
+      "answer": "A cosine similarity of 1.0 between two vectors means they point in the same direction [source #0].",
+      "cited_chunk_ids": [
+        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
+      ],
+      "token_usage": {
+        "prompt_tokens": 457,
+        "completion_tokens": 24,
+        "total_tokens": 481
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer directly quotes the context chunk that defines cosine similarity of 1.0.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer directly and fully responds to the question about the meaning of a cosine similarity of 1.0 between two vectors."
+      },
+      "em": 0.0,
+      "f1": 0.5714
     },
     {
       "id": "q2",
@@ -62,14 +86,33 @@
         "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377",
         "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2"
       ],
-      "retrieval_latency_ms": 18.54,
+      "retrieval_latency_ms": 24.44,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 1.0,
         "ndcg@k": 1.0,
         "context_precision@k": 0.3333333333333333
-      }
+      },
+      "answer": "ChromaDB is a low-cost vector store because it requires no separate server process, storing vectors and metadata on the local filesystem, which means cost is essentially the disk and the VM already run [chromadb_notes.md #0].",
+      "cited_chunk_ids": [
+        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875",
+        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
+      ],
+      "token_usage": {
+        "prompt_tokens": 786,
+        "completion_tokens": 47,
+        "total_tokens": 833
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer directly quotes and paraphrases a sentence from the context chunk chromadb_notes.md, accurately conveying the reason for ChromaDB's low cost.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer directly addresses the question, providing a clear and concise explanation for why ChromaDB is considered a low-cost vector store compared to a fully managed one."
+      },
+      "em": 0.0,
+      "f1": 0.5098
     },
     {
       "id": "q3",
@@ -82,14 +125,33 @@
         "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875",
         "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
       ],
-      "retrieval_latency_ms": 23.01,
+      "retrieval_latency_ms": 22.62,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 0.5,
         "ndcg@k": 0.6309297535714575,
         "context_precision@k": 0.3333333333333333
-      }
+      },
+      "answer": "Deriving a chunk id from its content (e.g., a hash of the source path plus the chunk text) makes re-ingestion idempotent because if you insert a record with an id that already exists, you can detect and skip it [chromadb_notes.md #0]. This prevents duplicate vectors from being created when running ingestion twice [chromadb_notes.md #0].",
+      "cited_chunk_ids": [
+        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
+        "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875"
+      ],
+      "token_usage": {
+        "prompt_tokens": 783,
+        "completion_tokens": 77,
+        "total_tokens": 860
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer directly quotes and references the context chunk from chromadb_notes.md, supporting its claim about idempotent ingestion.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer fully and directly addresses the question about how deriving a chunk id from its content makes re-ingestion idempotent."
+      },
+      "em": 0.0,
+      "f1": 0.2059
     },
     {
       "id": "q4",
@@ -102,14 +164,32 @@
         "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875",
         "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
       ],
-      "retrieval_latency_ms": 35.65,
+      "retrieval_latency_ms": 20.27,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 1.0,
         "ndcg@k": 1.0,
         "context_precision@k": 0.3333333333333333
-      }
+      },
+      "answer": "A RAG system should say it has no relevant context rather than fabricate an answer [source #0].",
+      "cited_chunk_ids": [
+        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2"
+      ],
+      "token_usage": {
+        "prompt_tokens": 456,
+        "completion_tokens": 23,
+        "total_tokens": 479
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer is directly supported by the context chunk, specifically the section on Grounding and citations.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer fully and directly addresses the question about what a RAG system should do when no retrieved chunk is relevant to the question."
+      },
+      "em": 0.0,
+      "f1": 0.8148
     },
     {
       "id": "q5",
@@ -122,14 +202,33 @@
         "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377",
         "3ece9d0e904eae30462856d3c81b4a137e41d08f5259f27a2122ef420580a875"
       ],
-      "retrieval_latency_ms": 32.63,
+      "retrieval_latency_ms": 27.41,
       "retrieval_metrics": {
         "recall@k": 1.0,
         "hit_rate@k": 1.0,
         "mrr@k": 1.0,
         "ndcg@k": 1.0,
         "context_precision@k": 0.3333333333333333
-      }
+      },
+      "answer": "Information-retrieval metrics such as Recall@k, Mean Reciprocal Rank (MRR), and normalized Discounted Cumulative Gain (nDCG) are used to measure retrieval quality in RAG [source #0].",
+      "cited_chunk_ids": [
+        "ca0836823170a5308b44c190f18f34b74ad009e97141fbb1b83c05a8c367fcc2",
+        "76c092519dc1ab2e9aecb8bcfdf0900e914d53540b55270d858ede9278fb6377"
+      ],
+      "token_usage": {
+        "prompt_tokens": 773,
+        "completion_tokens": 47,
+        "total_tokens": 820
+      },
+      "no_relevant_context": false,
+      "judge": {
+        "faithfulness": 5,
+        "faithfulness_rationale": "The answer directly quotes the context chunk about RAG evaluation, which mentions the specific metrics used to measure retrieval quality.",
+        "answer_relevance": 5,
+        "answer_relevance_rationale": "The answer fully and directly addresses the question by listing the metrics used to measure retrieval quality in RAG."
+      },
+      "em": 0.0,
+      "f1": 0.6111
     }
   ]
 }

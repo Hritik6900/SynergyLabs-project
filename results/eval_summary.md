@@ -19,13 +19,20 @@
 
 ## Answer quality
 
-_LLM-as-judge disabled (no LLM API key configured). Retrieval + latency were still evaluated._
+| Metric | Value |
+| --- | --- |
+| Faithfulness (1-5) | 5.0 |
+| Answer relevance (1-5) | 5.0 |
+| Exact Match | 0.0 |
+| Token F1 | 0.543 |
+
+_Judged 5 question(s)._
 
 ## Retrieval latency
 
 | Metric | ms |
 | --- | --- |
-| p50 | 23.01 |
-| p95 | 35.04 |
-| mean | 26.12 |
-| max | 35.65 |
+| p50 | 22.62 |
+| p95 | 26.81 |
+| mean | 22.36 |
+| max | 27.41 |
