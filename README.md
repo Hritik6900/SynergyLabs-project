@@ -17,6 +17,11 @@ quality, latency, and cost.
   + Groq generation → the only paid call is Groq generation (and Groq has a free tier).
 - **Interface:** FastAPI HTTP endpoints **and** a CLI.
 
+> 📸 **Screenshots** (end-to-end query + idempotent re-ingest, with reproducible
+> commands + captured output): [`docs/SCREENSHOTS.md`](docs/SCREENSHOTS.md).
+> 📝 **Reflection** (design decisions, what broke, what I'd change):
+> [`REFLECTION.md`](REFLECTION.md).
+
 ---
 
 ## Why ChromaDB (store justification)
@@ -351,6 +356,36 @@ For ~8 of 30 questions the gold chunk never entered the top-5 (Recall 0.73), and
 MRR 0.49 means even when it *is* retrieved it's often not rank 1. But when the right
 context is retrieved, generation is strong (faithfulness 5.0/5, relevance 5.0/5).
 **So the bottleneck is retrieval, not generation.**
+
+### Why retrieval was the weak link — the specific failure mode
+
+This isn't a hand-wave; the per-question results in
+[`results/eval_results.json`](results/eval_results.json) show a clear pattern. Of
+the **8 of 30 questions whose gold chunk never reached the top-5**, almost all ask
+for a **specific number or identifier that lives inside a table, code block, or
+ASCII diagram**:
+
+| Missed question | The answer it needs | Where it lives |
+| --- | --- | --- |
+| NavDrishti default risk threshold | `92.0` | markdown table row `\| DEFAULT_RISK_THRESHOLD \| 92.0 \|` |
+| Vote Rakshak gas cost | ~150k–350k gas | a "Gas Costs" table |
+| Vote Rakshak face-capture frames | `35+` stable frames | prose buried in a code/loop block |
+| NavDrishti edge hardware | Raspberry Pi 4, 2GB+ | a "Hardware Requirements" table |
+| DualCast keyframes / resolution | 5 frames @ 640×360 | a numbered pipeline step |
+
+**Why dense embeddings miss these:** a MiniLM (or mpnet) sentence embedding encodes
+*semantic gist*. A table row like `| DEFAULT_RISK_THRESHOLD | 92.0 | Min score … |`
+has almost no natural-language "gist" that lands near the question *"what is the
+default risk threshold?"* — and the surrounding pipes, numbers, and diagram
+characters in that chunk dilute its vector further. There is **no lexical/exact-term
+signal** in a pure dense retriever to rescue the match. That's the concrete reason,
+and it's also why a *bigger* dense model (mpnet) didn't help.
+
+A second, related effect shows in **MRR = 0.49**: for many *hit* questions the gold
+chunk is retrieved but **ranked below** a document's intro chunk. "What is DualCast?"
+and "What sampling temperature…?" both pull every doc's `#0` summary chunk to the
+top, because summaries are semantically closest to broad questions — so the more
+specific gold chunk lands at rank 2–3.
 
 ### What actually fixes retrieval here (tested, not assumed)
 
