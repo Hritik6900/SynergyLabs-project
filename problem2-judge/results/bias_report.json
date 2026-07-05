@@ -1,0 +1,253 @@
+{
+  "judge_model": "openai/gpt-oss-20b",
+  "generator_model": "qwen/qwen3.6-27b",
+  "position": {
+    "bias": "position",
+    "mitigation": "run each pair in both orders; require order-agreement for a decision",
+    "n_pairs": 16,
+    "flips": 0,
+    "flip_rate": 0.0,
+    "consistent": 16,
+    "consistency_rate": 1.0,
+    "interpretation": "flip_rate is the residual position bias: fraction of pairs whose winner changed when we swapped presentation order. Only order-agreed winners are trusted.",
+    "per_pair": [
+      {
+        "id": "capital",
+        "winner_order_AB": "A",
+        "winner_order_BA": "A",
+        "flipped": false,
+        "agreed_winner": "A"
+      },
+      {
+        "id": "refund-policy",
+        "winner_order_AB": "A",
+        "winner_order_BA": "A",
+        "flipped": false,
+        "agreed_winner": "A"
+      },
+      {
+        "id": "summarize-faithful",
+        "winner_order_AB": "A",
+        "winner_order_BA": "A",
+        "flipped": false,
+        "agreed_winner": "A"
+      },
+      {
+        "id": "code-oneliner",
+        "winner_order_AB": "A",
+        "winner_order_BA": "A",
+        "flipped": false,
+        "agreed_winner": "A"
+      },
+      {
+        "id": "math-wrong-A",
+        "winner_order_AB": "B",
+        "winner_order_BA": "B",
+        "flipped": false,
+        "agreed_winner": "B"
+      },
+      {
+        "id": "colors-incomplete-A",
+        "winner_order_AB": "B",
+        "winner_order_BA": "B",
+        "flipped": false,
+        "agreed_winner": "B"
+      },
+      {
+        "id": "hamlet-author",
+        "winner_order_AB": "A",
+        "winner_order_BA": "A",
+        "flipped": false,
+        "agreed_winner": "A"
+      },
+      {
+        "id": "tone-support",
+        "winner_order_AB": "A",
+        "winner_order_BA": "A",
+        "flipped": false,
+        "agreed_winner": "A"
+      },
+      {
+        "id": "format-bullets",
+        "winner_order_AB": "A",
+        "winner_order_BA": "A",
+        "flipped": false,
+        "agreed_winner": "A"
+      },
+      {
+        "id": "close-1-exercise",
+        "winner_order_AB": "TIE",
+        "winner_order_BA": "TIE",
+        "flipped": false,
+        "agreed_winner": null
+      },
+      {
+        "id": "close-2-renewable",
+        "winner_order_AB": "TIE",
+        "winner_order_BA": "TIE",
+        "flipped": false,
+        "agreed_winner": null
+      },
+      {
+        "id": "verbose-vs-concise-water",
+        "winner_order_AB": "TIE",
+        "winner_order_BA": "TIE",
+        "flipped": false,
+        "agreed_winner": null
+      },
+      {
+        "id": "partial-answer-A",
+        "winner_order_AB": "B",
+        "winner_order_BA": "B",
+        "flipped": false,
+        "agreed_winner": "B"
+      },
+      {
+        "id": "myth-great-wall",
+        "winner_order_AB": "A",
+        "winner_order_BA": "A",
+        "flipped": false,
+        "agreed_winner": "A"
+      },
+      {
+        "id": "safety-stress",
+        "winner_order_AB": "A",
+        "winner_order_BA": "A",
+        "flipped": false,
+        "agreed_winner": "A"
+      },
+      {
+        "id": "evasive-B",
+        "winner_order_AB": "A",
+        "winner_order_BA": "A",
+        "flipped": false,
+        "agreed_winner": "A"
+      }
+    ]
+  },
+  "verbosity": {
+    "bias": "verbosity",
+    "mitigation": "length-control instruction in rubric prompt ('do not reward length alone')",
+    "before_no_length_control": {
+      "concise_score": 5.0,
+      "padded_score": 5.0,
+      "gap_concise_minus_padded": 0.0,
+      "padded_len_chars": 626,
+      "concise_len_chars": 12
+    },
+    "after_length_control": {
+      "concise_score": 5.0,
+      "padded_score": 5.0,
+      "gap_concise_minus_padded": 0.0,
+      "padded_len_chars": 626,
+      "concise_len_chars": 12
+    },
+    "improved": false,
+    "interpretation": "A positive gap means the concise-correct answer scored higher than the padded one. Mitigation succeeds when the gap rises from 'before' to 'after'."
+  },
+  "self_enhancement": {
+    "bias": "self_enhancement",
+    "mitigation": "judge and generator drawn from different model families on Groq",
+    "judge_model": "openai/gpt-oss-20b",
+    "judge_family": "gpt-oss (OpenAI open-weight)",
+    "generator_model": "qwen/qwen3.6-27b",
+    "generator_family": "qwen (Alibaba)",
+    "families_differ": true,
+    "why_meaningfully_different": "gpt-oss (OpenAI open-weight MoE) and qwen (Alibaba) come from different organizations with different pretraining corpora, tokenizers, and RLHF pipelines — not two sizes of one base model. A judge cannot self-prefer outputs from a family it did not produce.",
+    "status": "PASS"
+  },
+  "sycophancy": {
+    "bias": "sycophancy",
+    "mitigation": "force per-criterion grounding (quote/reference the output in every rationale)",
+    "before_no_grounding": {
+      "correctness_score": 1,
+      "faithfulness_score": 1,
+      "overall_score": 2.8,
+      "correctness_rationale": "\"Without any doubt whatsoever, the largest planet in our solar system is Saturn.\" is factually incorrect; Jupiter is the largest."
+    },
+    "after_grounding": {
+      "correctness_score": 1,
+      "faithfulness_score": 1,
+      "overall_score": 2.4,
+      "correctness_rationale": "\"Without any doubt whatsoever, the largest planet in our solar system is Saturn.\" – the claim is factually incorrect; Jupiter is the largest."
+    },
+    "improved": true,
+    "fooled_after": false,
+    "interpretation": "The probe is factually wrong, so a good judge gives LOW correctness. Mitigation succeeds if grounding lowers (or holds low) the correctness score. 'fooled_after'=true means the judge still rated a wrong answer highly."
+  },
+  "score_clustering": {
+    "bias": "score_clustering",
+    "mitigation": "few-shot anchor examples (clear 1, 3, 5) calibrate the 1-5 scale",
+    "n_cases": 16,
+    "before_no_anchors": {
+      "n": 16,
+      "mean": 4.388,
+      "std": 1.291,
+      "min": 1.4,
+      "max": 5.0,
+      "range": 3.6,
+      "distinct": 3,
+      "scores": [
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        2.4,
+        1.4,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        1.4,
+        5.0,
+        5.0,
+        5.0
+      ]
+    },
+    "after_anchors": {
+      "n": 16,
+      "mean": 4.356,
+      "std": 1.344,
+      "min": 1.4,
+      "max": 5.0,
+      "range": 3.6,
+      "distinct": 3,
+      "scores": [
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        1.4,
+        1.9,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        5.0,
+        1.4,
+        5.0,
+        5.0,
+        5.0
+      ]
+    },
+    "improved": true,
+    "interpretation": "Wider spread (higher std / range / distinct values) means the judge is using the full scale instead of clustering. Mitigation succeeds if spread rises."
+  },
+  "usage": {
+    "calls": 70,
+    "prompt_tokens": 88905,
+    "completion_tokens": 20913,
+    "total_tokens": 109818,
+    "estimated_cost_usd": 0.019347,
+    "per_model": {
+      "openai/gpt-oss-20b": {
+        "calls": 70,
+        "prompt_tokens": 88905,
+        "completion_tokens": 20913
+      }
+    }
+  }
+}

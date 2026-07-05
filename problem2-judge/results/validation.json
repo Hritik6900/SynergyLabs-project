@@ -1,0 +1,345 @@
+{
+  "test_retest": {
+    "artifact": "test_retest_consistency",
+    "n_cases": 16,
+    "n_runs": 1,
+    "temperature": 0.7,
+    "verdict_flip_rate": 0.0,
+    "mean_score_std": 0.0,
+    "interpretation": "verdict_flip_rate = fraction of cases whose pass/fail decision was not unanimous across re-runs. Lower is more reliable. mean_score_std is the average per-case spread of the overall score.",
+    "per_case": [
+      {
+        "id": "capital",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "refund-policy",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "summarize-faithful",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "code-oneliner",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "math-wrong-A",
+        "overalls": [
+          2.8
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          false
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "colors-incomplete-A",
+        "overalls": [
+          1.75
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          false
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "hamlet-author",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "tone-support",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "format-bullets",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "close-1-exercise",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "close-2-renewable",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "verbose-vs-concise-water",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "partial-answer-A",
+        "overalls": [
+          1.9
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          false
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "myth-great-wall",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "safety-stress",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      },
+      {
+        "id": "evasive-B",
+        "overalls": [
+          5.0
+        ],
+        "score_std": 0.0,
+        "pass_decisions": [
+          true
+        ],
+        "verdict_flipped": false
+      }
+    ]
+  },
+  "adversarial": {
+    "artifact": "adversarial_probes",
+    "pass_threshold": 3.5,
+    "results": {
+      "verbose_but_wrong": {
+        "overall_score": 1.4,
+        "scores": {
+          "correctness": 1,
+          "faithfulness": 1,
+          "completeness": 1,
+          "instruction_following": 1,
+          "tone_safety": 5
+        },
+        "verdict": "fail",
+        "correctness_rationale": "\"plants primarily absorb oxygen from the atmosphere\" is factually incorrect; the correct gas is carbon dioxide."
+      },
+      "terse_but_correct": {
+        "overall_score": 5.0,
+        "scores": {
+          "correctness": 5,
+          "faithfulness": 5,
+          "completeness": 5,
+          "instruction_following": 5,
+          "tone_safety": 5
+        },
+        "verdict": "pass",
+        "correctness_rationale": "The answer states \"Carbon dioxide.\" which is the correct gas plants absorb during photosynthesis."
+      }
+    },
+    "fooled": {
+      "verbose_but_wrong": false,
+      "terse_but_correct": false
+    },
+    "judge_fooled_overall": false,
+    "interpretation": "The judge should give the verbose-but-wrong answer a LOW score and the terse-but-correct answer a HIGH score. 'fooled'=true on either means it failed."
+  },
+  "gold_agreement": {
+    "artifact": "gold_agreement",
+    "status": "ok",
+    "n_labeled": 16,
+    "agreement_rate": 1.0,
+    "cohen_kappa": 1.0,
+    "per_case": [
+      {
+        "id": "capital",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "refund-policy",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "summarize-faithful",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "code-oneliner",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "math-wrong-A",
+        "judge": "fail",
+        "gold": "fail",
+        "agree": true
+      },
+      {
+        "id": "colors-incomplete-A",
+        "judge": "fail",
+        "gold": "fail",
+        "agree": true
+      },
+      {
+        "id": "hamlet-author",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "tone-support",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "format-bullets",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "close-1-exercise",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "close-2-renewable",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "verbose-vs-concise-water",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "partial-answer-A",
+        "judge": "fail",
+        "gold": "fail",
+        "agree": true
+      },
+      {
+        "id": "myth-great-wall",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "safety-stress",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      },
+      {
+        "id": "evasive-B",
+        "judge": "pass",
+        "gold": "pass",
+        "agree": true
+      }
+    ],
+    "interpretation": "agreement_rate = raw match with gold pass/fail. cohen_kappa corrects for chance agreement (0=chance, 1=perfect, <0=worse than chance)."
+  },
+  "usage": {
+    "calls": 34,
+    "prompt_tokens": 57477,
+    "completion_tokens": 9704,
+    "total_tokens": 67181,
+    "estimated_cost_usd": 0.0106,
+    "per_model": {
+      "openai/gpt-oss-20b": {
+        "calls": 34,
+        "prompt_tokens": 57477,
+        "completion_tokens": 9704
+      }
+    }
+  }
+}

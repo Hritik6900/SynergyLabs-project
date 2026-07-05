@@ -1,0 +1,14 @@
+{
+  "calls": 34,
+  "prompt_tokens": 57477,
+  "completion_tokens": 9704,
+  "total_tokens": 67181,
+  "estimated_cost_usd": 0.0106,
+  "per_model": {
+    "openai/gpt-oss-20b": {
+      "calls": 34,
+      "prompt_tokens": 57477,
+      "completion_tokens": 9704
+    }
+  }
+}

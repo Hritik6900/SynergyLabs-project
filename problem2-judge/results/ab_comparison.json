@@ -1,0 +1,118 @@
+{
+  "name_a": "config_A_v1",
+  "name_b": "config_B_v2",
+  "mode": "pairwise (order-averaged, both A-B and B-A) \u2014 from the position-bias run: real Groq verdicts on all 16 pairs",
+  "n_pairs": 16,
+  "pairwise": {
+    "a_wins": 10,
+    "b_wins": 3,
+    "ties": 3,
+    "undecided_order_inconsistent": 0,
+    "a_win_rate_of_decided": 0.769,
+    "b_win_rate_of_decided": 0.231,
+    "per_pair": [
+      {
+        "id": "capital",
+        "order_AB": "A",
+        "order_BA": "A",
+        "decision": "config_A_v1"
+      },
+      {
+        "id": "refund-policy",
+        "order_AB": "A",
+        "order_BA": "A",
+        "decision": "config_A_v1"
+      },
+      {
+        "id": "summarize-faithful",
+        "order_AB": "A",
+        "order_BA": "A",
+        "decision": "config_A_v1"
+      },
+      {
+        "id": "code-oneliner",
+        "order_AB": "A",
+        "order_BA": "A",
+        "decision": "config_A_v1"
+      },
+      {
+        "id": "math-wrong-A",
+        "order_AB": "B",
+        "order_BA": "B",
+        "decision": "config_B_v2"
+      },
+      {
+        "id": "colors-incomplete-A",
+        "order_AB": "B",
+        "order_BA": "B",
+        "decision": "config_B_v2"
+      },
+      {
+        "id": "hamlet-author",
+        "order_AB": "A",
+        "order_BA": "A",
+        "decision": "config_A_v1"
+      },
+      {
+        "id": "tone-support",
+        "order_AB": "A",
+        "order_BA": "A",
+        "decision": "config_A_v1"
+      },
+      {
+        "id": "format-bullets",
+        "order_AB": "A",
+        "order_BA": "A",
+        "decision": "config_A_v1"
+      },
+      {
+        "id": "close-1-exercise",
+        "order_AB": "TIE",
+        "order_BA": "TIE",
+        "decision": "tie"
+      },
+      {
+        "id": "close-2-renewable",
+        "order_AB": "TIE",
+        "order_BA": "TIE",
+        "decision": "tie"
+      },
+      {
+        "id": "verbose-vs-concise-water",
+        "order_AB": "TIE",
+        "order_BA": "TIE",
+        "decision": "tie"
+      },
+      {
+        "id": "partial-answer-A",
+        "order_AB": "B",
+        "order_BA": "B",
+        "decision": "config_B_v2"
+      },
+      {
+        "id": "myth-great-wall",
+        "order_AB": "A",
+        "order_BA": "A",
+        "decision": "config_A_v1"
+      },
+      {
+        "id": "safety-stress",
+        "order_AB": "A",
+        "order_BA": "A",
+        "decision": "config_A_v1"
+      },
+      {
+        "id": "evasive-B",
+        "order_AB": "A",
+        "order_BA": "A",
+        "decision": "config_A_v1"
+      }
+    ]
+  },
+  "winner": {
+    "winner": "config_A_v1",
+    "basis": [
+      "pairwise head-to-head over 16 pairs, both orders: config_A_v1=10 vs config_B_v2=3, ties=3, order-inconsistent=0"
+    ]
+  }
+}

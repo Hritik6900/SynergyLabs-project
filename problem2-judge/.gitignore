@@ -3,4 +3,6 @@ __pycache__/
 *.pyc
 .env
 logs/
-results/
+
+# results/ are committed as deliverables (bias_report, suite_report, ab_comparison,
+# validation, usage). Regenerate by re-running the harness.
