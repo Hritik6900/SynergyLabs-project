@@ -2,19 +2,23 @@
   "test_retest": {
     "artifact": "test_retest_consistency",
     "n_cases": 16,
-    "n_runs": 1,
+    "n_runs": 3,
     "temperature": 0.7,
     "verdict_flip_rate": 0.0,
-    "mean_score_std": 0.0,
+    "mean_score_std": 0.05,
     "interpretation": "verdict_flip_rate = fraction of cases whose pass/fail decision was not unanimous across re-runs. Lower is more reliable. mean_score_std is the average per-case spread of the overall score.",
     "per_case": [
       {
         "id": "capital",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -22,10 +26,14 @@
       {
         "id": "refund-policy",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -33,10 +41,14 @@
       {
         "id": "summarize-faithful",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -44,10 +56,14 @@
       {
         "id": "code-oneliner",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -55,10 +71,14 @@
       {
         "id": "math-wrong-A",
         "overalls": [
-          2.8
+          1.4,
+          2.4,
+          1.4
         ],
-        "score_std": 0.0,
+        "score_std": 0.471,
         "pass_decisions": [
+          false,
+          false,
           false
         ],
         "verdict_flipped": false
@@ -66,10 +86,14 @@
       {
         "id": "colors-incomplete-A",
         "overalls": [
-          1.75
+          1.4,
+          1.85,
+          1.55
         ],
-        "score_std": 0.0,
+        "score_std": 0.187,
         "pass_decisions": [
+          false,
+          false,
           false
         ],
         "verdict_flipped": false
@@ -77,10 +101,14 @@
       {
         "id": "hamlet-author",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -88,10 +116,14 @@
       {
         "id": "tone-support",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -99,10 +131,14 @@
       {
         "id": "format-bullets",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -110,10 +146,14 @@
       {
         "id": "close-1-exercise",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -121,10 +161,14 @@
       {
         "id": "close-2-renewable",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -132,10 +176,14 @@
       {
         "id": "verbose-vs-concise-water",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -143,10 +191,14 @@
       {
         "id": "partial-answer-A",
         "overalls": [
-          1.9
+          1.4,
+          1.4,
+          1.7
         ],
-        "score_std": 0.0,
+        "score_std": 0.141,
         "pass_decisions": [
+          false,
+          false,
           false
         ],
         "verdict_flipped": false
@@ -154,10 +206,14 @@
       {
         "id": "myth-great-wall",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -165,10 +221,14 @@
       {
         "id": "safety-stress",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -176,10 +236,14 @@
       {
         "id": "evasive-B",
         "overalls": [
+          5.0,
+          5.0,
           5.0
         ],
         "score_std": 0.0,
         "pass_decisions": [
+          true,
+          true,
           true
         ],
         "verdict_flipped": false
@@ -212,7 +276,7 @@
           "tone_safety": 5
         },
         "verdict": "pass",
-        "correctness_rationale": "The answer states \"Carbon dioxide.\" which is the correct gas plants absorb during photosynthesis."
+        "correctness_rationale": "\"Carbon dioxide.\" is the correct gas plants absorb during photosynthesis."
       }
     },
     "fooled": {
@@ -329,16 +393,16 @@
     "interpretation": "agreement_rate = raw match with gold pass/fail. cohen_kappa corrects for chance agreement (0=chance, 1=perfect, <0=worse than chance)."
   },
   "usage": {
-    "calls": 34,
-    "prompt_tokens": 57477,
-    "completion_tokens": 9704,
-    "total_tokens": 67181,
-    "estimated_cost_usd": 0.0106,
+    "calls": 66,
+    "prompt_tokens": 111531,
+    "completion_tokens": 18571,
+    "total_tokens": 130102,
+    "estimated_cost_usd": 0.020439,
     "per_model": {
       "openai/gpt-oss-20b": {
-        "calls": 34,
-        "prompt_tokens": 57477,
-        "completion_tokens": 9704
+        "calls": 66,
+        "prompt_tokens": 111531,
+        "completion_tokens": 18571
       }
     }
   }
