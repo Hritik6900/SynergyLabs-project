@@ -1,0 +1,6 @@
+# Everything routes through Groq's OpenAI-compatible endpoint,
+# so we only need the openai SDK — NOT anthropic / google-generativeai.
+openai>=1.40.0
+python-dotenv>=1.0.0
+# Suites may be JSON or YAML.
+PyYAML>=6.0

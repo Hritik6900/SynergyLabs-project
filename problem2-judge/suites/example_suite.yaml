@@ -1,0 +1,14 @@
+# Example YAML suite — same schema as test_suite.json. Run:
+#   python main.py --suite suites/example_suite.yaml
+cases:
+  - id: yaml-demo-01
+    input: "What is the capital of Japan?"
+    system_prompt: "Be concise and factual."
+    model_output: "The capital of Japan is Tokyo."
+    expected_output: "Tokyo"
+    gold_label: pass
+  # A case with NO model_output + a second system prompt -> `--generate` will fill both (A/B):
+  - id: yaml-demo-02-generate-me
+    input: "Explain what a hash map is in one sentence."
+    system_prompt: "You are a terse expert."
+    system_prompt_b: "You are a verbose, beginner-friendly teacher."

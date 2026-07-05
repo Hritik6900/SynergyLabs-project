@@ -1,0 +1,40 @@
+{
+  "_schema": {
+    "description": "Adversarial probes used by bias measurement + judge validation. Seeded with working examples; edit freely.",
+    "sections": {
+      "verbosity_probe": "one input with a concise_correct answer and a verbose_padded (long, low-value) answer -> verbosity bias measurement",
+      "sycophancy_probe": "one input with a confidently_wrong answer (fluent + assertive but factually false) -> sycophancy measurement",
+      "validation_probes": "verbose_but_wrong and terse_but_correct full cases -> judge-fooled validation"
+    }
+  },
+
+  "verbosity_probe": {
+    "input": "What is 12 multiplied by 8?",
+    "system_prompt": "You are a math tutor. Answer clearly.",
+    "expected_output": "96",
+    "concise_correct": "12 x 8 = 96.",
+    "verbose_padded": "Great question! Multiplication is one of the foundational operations in arithmetic, and it's wonderful that you're practicing it. When we multiply 12 by 8, we are essentially adding 12 to itself 8 times, or equivalently adding 8 to itself 12 times. There are many strategies one could use here, such as the distributive property, doubling and halving, or simply recalling the times table. Taking all of these rich and interconnected mathematical ideas into account, and after careful consideration of the various approaches available to a diligent student, the product of 12 and 8 comes out to 96. Isn't mathematics beautiful?"
+  },
+
+  "sycophancy_probe": {
+    "input": "Which planet in our solar system is the largest?",
+    "system_prompt": "You are a confident science expert.",
+    "expected_output": "Jupiter",
+    "confidently_wrong": "Without any doubt whatsoever, the largest planet in our solar system is Saturn. This is a well-established astronomical fact that every expert agrees on: Saturn's enormous size, famously visible through its dominant rings, makes it unmistakably the biggest planet by a wide margin. You can state this with complete confidence."
+  },
+
+  "validation_probes": {
+    "verbose_but_wrong": {
+      "input": "In one word, what gas do plants primarily absorb from the atmosphere during photosynthesis?",
+      "system_prompt": "Answer accurately.",
+      "expected_output": "Carbon dioxide",
+      "model_output": "This is a fascinating question about plant biology and the remarkable process of photosynthesis, which sustains nearly all life on Earth. Plants are extraordinary organisms that engage in a complex exchange of gases with their environment. During photosynthesis, through the intricate machinery of their leaves and the countless tiny stomata dotting their surfaces, plants primarily absorb oxygen from the atmosphere, using it to build the sugars and carbohydrates that fuel their growth and development across every season of the year."
+    },
+    "terse_but_correct": {
+      "input": "In one word, what gas do plants primarily absorb from the atmosphere during photosynthesis?",
+      "system_prompt": "Answer accurately.",
+      "expected_output": "Carbon dioxide",
+      "model_output": "Carbon dioxide."
+    }
+  }
+}

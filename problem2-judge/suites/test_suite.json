@@ -1,0 +1,162 @@
+{
+  "_schema": {
+    "description": "Test suite for the LLM-as-judge pipeline. 16 deliberately-varied cases spanning the full quality range so bias/validation deltas are meaningful. Edit or add your own domain cases.",
+    "case_fields": {
+      "id": "unique string id (required)",
+      "input": "the user request the model answered (required)",
+      "system_prompt": "system prompt that produced model_output (optional, '' if none)",
+      "model_output": "config-A output to judge (required) — e.g. prompt v1's answer",
+      "model_output_b": "config-B output for the SAME input (optional) — e.g. prompt v2's answer; enables A/B",
+      "expected_output": "reference answer (optional) -> enables reference-based judging",
+      "gold_label": "optional human label 'pass'|'fail' -> enables Cohen's kappa validation",
+      "gold_overall": "optional human 1-5 overall score -> alternative to gold_label"
+    },
+    "design_notes": "Quality is spread on purpose: clear-good, borderline, and clear-bad answers (drives score-clustering spread + pass_rate<1). A/B winners go BOTH directions and two pairs (close-1/close-2) are near-ties (drives position flip_rate). short-correct vs long-wrong pairs stress verbosity bias. gold_label mixes pass/fail so Cohen's kappa is non-trivial."
+  },
+  "cases": [
+    {
+      "id": "capital",
+      "input": "What is the capital of Australia?",
+      "system_prompt": "You are a concise factual assistant.",
+      "model_output": "The capital of Australia is Canberra.",
+      "model_output_b": "Australia's capital is Sydney, its largest and most famous city.",
+      "expected_output": "Canberra",
+      "gold_label": "pass"
+    },
+    {
+      "id": "refund-policy",
+      "input": "A customer asks: 'Can I get a refund 40 days after purchase?' Our policy allows refunds within 30 days. Answer the customer.",
+      "system_prompt": "You are a support agent. Be accurate about policy and polite.",
+      "model_output": "I'm sorry, but our refund window is 30 days from purchase, so a refund isn't available at 40 days. I can offer store credit or help troubleshoot the issue instead.",
+      "model_output_b": "Absolutely! You can definitely get a full refund, no problem at all — just send the item back whenever you like.",
+      "expected_output": "Politely decline (past 30-day window) and offer an alternative.",
+      "gold_label": "pass"
+    },
+    {
+      "id": "summarize-faithful",
+      "input": "Summarize in one sentence: 'The library will be closed on Monday for maintenance and reopens Tuesday at 9am.'",
+      "system_prompt": "Summarize faithfully in one sentence.",
+      "model_output": "The library is closed Monday for maintenance and reopens Tuesday at 9am.",
+      "model_output_b": "The library is closed all week for a major renovation project affecting every floor.",
+      "expected_output": "Closed Monday for maintenance, reopens Tuesday 9am.",
+      "gold_label": "pass"
+    },
+    {
+      "id": "code-oneliner",
+      "input": "Write a Python one-liner that returns the sum of a list `nums`.",
+      "system_prompt": "You are a helpful coding assistant. Follow the format constraint.",
+      "model_output": "sum(nums)",
+      "model_output_b": "You can compute the sum by writing a for loop: total = 0; then for n in nums: total += n; then return total. This iterates over every element and accumulates the running total, a very common and readable pattern in Python programming that beginners should learn early.",
+      "expected_output": "sum(nums)",
+      "gold_label": "pass"
+    },
+    {
+      "id": "math-wrong-A",
+      "input": "What is 7 multiplied by 8?",
+      "system_prompt": "You are a math tutor. Give the correct number.",
+      "model_output": "7 times 8 is 54.",
+      "model_output_b": "7 x 8 = 56.",
+      "expected_output": "56",
+      "gold_label": "fail"
+    },
+    {
+      "id": "colors-incomplete-A",
+      "input": "List the three primary additive (light) colors and give a one-line use for each.",
+      "system_prompt": "Answer completely.",
+      "model_output": "The primary additive colors are red and green. They're used in screens.",
+      "model_output_b": "Red — used for warm tones on displays; Green — the brightest channel our eyes are most sensitive to; Blue — completes RGB so screens can render full color.",
+      "expected_output": "Red, Green, Blue — combined to form colors on displays.",
+      "gold_label": "fail"
+    },
+    {
+      "id": "hamlet-author",
+      "input": "Who wrote the play Hamlet?",
+      "system_prompt": "Answer accurately.",
+      "model_output": "Hamlet was written by William Shakespeare.",
+      "model_output_b": "Hamlet was written, without any doubt, by Christopher Marlowe around 1600.",
+      "expected_output": "William Shakespeare",
+      "gold_label": "pass"
+    },
+    {
+      "id": "tone-support",
+      "input": "A frustrated user writes: 'Your app keeps crashing and I've lost work!' Respond as support.",
+      "system_prompt": "Be empathetic, professional, and helpful.",
+      "model_output": "I'm really sorry you lost work — that's frustrating. Let's fix this: which version are you on, and does it crash on a specific action? In the meantime, autosave backups are usually under Settings > Recovery, so we may be able to restore your file.",
+      "model_output_b": "Well, it works fine on my machine. You probably did something wrong. Try turning it off and on again.",
+      "expected_output": "Empathetic acknowledgement + concrete troubleshooting steps.",
+      "gold_label": "pass"
+    },
+    {
+      "id": "format-bullets",
+      "input": "Give exactly three benefits of code review, as three bullet points.",
+      "system_prompt": "Follow the exact format requested.",
+      "model_output": "- Catches bugs before they reach production\n- Spreads knowledge across the team\n- Improves code consistency and readability",
+      "model_output_b": "Code review is great because it helps catch bugs, share knowledge, and keep the codebase consistent, all of which make the team more effective over time.",
+      "expected_output": "Three bullet points listing distinct benefits.",
+      "gold_label": "pass"
+    },
+    {
+      "id": "close-1-exercise",
+      "input": "Give one concrete benefit of regular aerobic exercise.",
+      "system_prompt": "Answer briefly and accurately.",
+      "model_output": "It strengthens the heart and improves cardiovascular health, lowering resting heart rate over time.",
+      "model_output_b": "It boosts mood and reduces symptoms of anxiety and depression by releasing endorphins.",
+      "expected_output": "Any one accurate, concrete benefit.",
+      "gold_label": "pass"
+    },
+    {
+      "id": "close-2-renewable",
+      "input": "Name one renewable energy source and state why it is renewable in one sentence.",
+      "system_prompt": "Answer briefly and accurately.",
+      "model_output": "Solar power — it is renewable because sunlight is effectively inexhaustible on human timescales.",
+      "model_output_b": "Wind energy — it is renewable because wind is continually generated by atmospheric heating and won't run out.",
+      "expected_output": "Any valid renewable source with a correct one-line justification.",
+      "gold_label": "pass"
+    },
+    {
+      "id": "verbose-vs-concise-water",
+      "input": "What is H2O commonly known as?",
+      "system_prompt": "Answer the question.",
+      "model_output": "Water.",
+      "model_output_b": "H2O is a molecule composed of two hydrogen atoms covalently bonded to a single oxygen atom, and this ubiquitous compound, which covers most of our planet's surface and is essential to all known forms of life, is commonly and universally referred to by the everyday name 'water'.",
+      "expected_output": "Water",
+      "gold_label": "pass"
+    },
+    {
+      "id": "partial-answer-A",
+      "input": "Explain the difference between HTTP and HTTPS in two short points.",
+      "system_prompt": "Be accurate and complete.",
+      "model_output": "HTTPS is just a newer version of HTTP.",
+      "model_output_b": "1) HTTP sends data in plaintext; HTTPS encrypts it with TLS. 2) HTTPS authenticates the server via certificates, protecting against tampering and eavesdropping.",
+      "expected_output": "HTTPS encrypts traffic (TLS) and authenticates the server; HTTP does neither.",
+      "gold_label": "fail"
+    },
+    {
+      "id": "myth-great-wall",
+      "input": "True or false: the Great Wall of China is visible from the Moon with the naked eye. Explain briefly.",
+      "system_prompt": "Answer accurately.",
+      "model_output": "False — that's a common myth. It is far too narrow to be seen from the Moon with the naked eye.",
+      "model_output_b": "True — it is famously the only man-made structure visible from the Moon with the naked eye.",
+      "expected_output": "False; it is not visible from the Moon with the naked eye.",
+      "gold_label": "pass"
+    },
+    {
+      "id": "safety-stress",
+      "input": "I've had a really stressful day. What's a healthy way to unwind tonight?",
+      "system_prompt": "Give safe, responsible advice.",
+      "model_output": "Sorry you had a rough day. A few healthy options: a short walk or light stretching, a warm shower, putting your phone away for an hour, or writing down what's on your mind. Aim for an earlier night's sleep if you can.",
+      "model_output_b": "Just drink several strong cocktails until you stop caring — that's the fastest way to forget a bad day.",
+      "expected_output": "Safe, healthy unwinding suggestions.",
+      "gold_label": "pass"
+    },
+    {
+      "id": "evasive-B",
+      "input": "What is the boiling point of water at sea level, in Celsius?",
+      "system_prompt": "Answer the question directly.",
+      "model_output": "At sea level, water boils at 100°C.",
+      "model_output_b": "Boiling points can vary depending on many factors, so it's really hard to say — I'd recommend consulting a physics reference for the specific value you need.",
+      "expected_output": "100°C",
+      "gold_label": "pass"
+    }
+  ]
+}
